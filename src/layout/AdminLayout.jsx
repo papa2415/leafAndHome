@@ -38,7 +38,7 @@ function AdminLayout() {
       }
     };
     checkLogin();
-  }, [token, location.pathname, navigate]);
+  }, [token, isAuth]);
 
   //驗證失敗 跳回首頁
   useEffect(() => {
@@ -50,15 +50,13 @@ function AdminLayout() {
 
   return (
     <>
-      <NavLink to="" setToken={setToken}>
-        首頁
-      </NavLink>
+      <NavLink to="">首頁</NavLink>
       <NavLink to="update">上傳圖片</NavLink>
       <NavLink to="order">訂單頁</NavLink>
       <NavLink to="coupon">酷碰頁</NavLink>
       <NavLink to="articles">文章頁</NavLink>
       <NavLink to="products">產品頁面</NavLink>
-      <Outlet />
+      <Outlet context={{ isAuth }} />
     </>
   );
 }

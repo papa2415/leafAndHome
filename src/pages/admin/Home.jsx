@@ -1,15 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
-function Home({ setToken }) {
+function Home() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-  console.log(setToken);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,7 +18,7 @@ function Home({ setToken }) {
       [name]: value,
     }));
   };
-
+  const navigate = useNavigate();
   //登入
   const onSubmit = async (e) => {
     try {
@@ -26,10 +26,10 @@ function Home({ setToken }) {
       const response = await axios.post(`${API_BASE}/admin/signin`, formData);
       const { token, expired } = response.data;
       document.cookie = `hexTokenAPI=${token};expires=${new Date(expired)};`;
-      axios.defaults.headers.common["Authorization"] = token;
-      setToken(token);
+
+      navigate("products", { replace: true });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
