@@ -2,9 +2,11 @@
 @import "./utils/variables";
 @import "../../../node_modules/bootstrap";
 
+@import "./base/base";
+
 //元件
 // @import "./layout/header.scss";
 // @import "./layout/footer.scss";
 
 //頁面
-// @import "./pages/index.scss";
+@import "./pages/index.scss";
