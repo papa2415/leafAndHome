@@ -1,3 +1,132 @@
+//從你的生活場景開始
+.place .card {
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  z-index: 1;
+  border: none;
+}
+.place img {
+  display: block; /* 避免底部空隙 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.place:hover img {
+  transform: translateZ(0) scale(1.1);
+}
+
+//最適合新手的植物清單
+.card-hor-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card-hor {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.card-hor-link:hover .card-hor {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+//植物卡
+/* 連結保持原樣 */
+.card-product-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 卡片：圓角 + 裁切 + 動畫 */
+.card-product {
+  overflow: hidden; /* 防止圖片放大溢出 */
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 圖片：微放大動畫（低調） */
+.card-product-img {
+  display: block;
+  width: 100%;
+  height: 180px; /* 你可以依設計調整 */
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* hover：很輕微，不會太凸 */
+.card-product-link:hover .card-product {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-product-link:hover .card-product-img {
+  transform: translateZ(0) scale(1.03);
+}
+
+/* 鍵盤可及性（Tab 也有 hover 感） */
+.card-product-link:focus-visible .card-product {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+//文章卡片
+.card-article-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 卡片：用 ring 當 hover 提示，不用陰影、不位移 */
+.card-article {
+  overflow: hidden; /* 圖片放大不會溢出 */
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* 圖片：微放大 + 微微變暗（很適合貼邊版面） */
+.card-article img {
+  display: block;
+  width: 100%;
+  transition:
+    transform 0.35s ease,
+    filter 0.2s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* hover：只做 ring + 淡淡底色（可把底色拿掉） */
+.card-article-link:hover .card-article {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.03); /* 像邊框，不是凸起 */
+  background-color: rgba(255, 255, 255, 0.1); /* 很淡，不會破壞無底色感 */
+}
+
+.card-article-link:hover .card-article img {
+  transform: translateZ(0) scale(1.02);
+  filter: brightness(0.96);
+}
+
+/* 鍵盤可及性（Tab） */
+.card-article-link:focus-visible .card-article {
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
 .circle {
   width: 36px;
   height: 36px;
@@ -11,4 +140,9 @@
 .phone {
   width: 224px;
   height: 400px;
+}
+
+.backgroud_blur {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(7.5px);
 }

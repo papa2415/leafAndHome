@@ -1,13 +1,13 @@
-import place from "/place.png";
-import plant from "/plant.png";
+import place_image from "/place.png";
 import phone from "/phone.png";
-import Card_hor from "../../component/Card_hor";
+
 import Card_place from "../../component/Card_place";
 import product from "/product.png";
 import Card_product from "../../component/Card_product";
 import article from "/article.png";
 import Card_article from "../../component/Card_Article";
 import Pill from "../../component/Pill";
+import Card_list from "../../component/Card_list";
 
 function Home() {
   return (
@@ -21,16 +21,16 @@ function Home() {
           </div>
           <div className="row row-cols-4 g-6">
             <div className="col">
-              <Card_place place={place} />
+              <Card_place image={place_image} title="租屋小套房" content="小空間也能綠意盎然" />
             </div>
             <div className="col">
-              <Card_place place={place} />
+              <Card_place image={place_image} title="辦公桌增綠" content="工作環境更舒心" />
             </div>
             <div className="col">
-              <Card_place place={place} />
+              <Card_place image={place_image} title="臥室療癒角" content="助眠淨化好夥伴" />
             </div>
             <div className="col">
-              <Card_place place={place} />
+              <Card_place image={place_image} title="陽台小花園" content="戶外綠化好選擇" />
             </div>
           </div>
         </div>
@@ -43,55 +43,13 @@ function Home() {
           </div>
           <div className="row row-cols-3">
             <div className="col">
-              <div className="card radius-top-right p-5">
-                <h3 className="text-neutral-900">幾乎沒日照也能活</h3>
-                <p className="text-neutral-700 mb-5">適合幾乎沒日照空間的植物 TOP 5</p>
-                <div className="card-body">
-                  <div className="row  flex-column g-4">
-                    <div className="cols">
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Card_list />
             </div>
             <div className="col">
-              <div className="card radius-top-right p-5">
-                <h3 className="text-neutral-900">幾乎沒日照也能活</h3>
-                <p className="text-neutral-700 mb-5">適合幾乎沒日照空間的植物 TOP 5</p>
-                <div className="card-body">
-                  <div className="row  flex-column g-4">
-                    <div className="cols">
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Card_list />
             </div>
             <div className="col">
-              <div className="card radius-top-right p-5">
-                <h3 className="text-neutral-900">幾乎沒日照也能活</h3>
-                <p className="text-neutral-700 mb-5">適合幾乎沒日照空間的植物 TOP 5</p>
-                <div className="card-body">
-                  <div className="row  flex-column g-4">
-                    <div className="cols">
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                      <Card_hor plant={plant} />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Card_list />
             </div>
           </div>
         </div>

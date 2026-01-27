@@ -1,12 +1,17 @@
-function Card_place({ place }) {
+import { NavLink } from "react-router";
+function Card_place({ image, title, content }) {
   return (
-    <div className="card radius-top-right">
-      <img src={place} className="card-img-top radius-top-right" alt="租屋小套房" />
-      <div className="card-body text-center px-6 pb-5">
-        <h5 className="card-title h4 text-neutral-900">租屋小套房</h5>
-        <p className="card-text">小空間也能綠意盎然</p>
-      </div>
-    </div>
+    <>
+      <NavLink className="place" to="/products">
+        <div className="card radius-top-right position-relative">
+          <img src={image} className="" alt="租屋小套房" />
+          <div className="position-absolute  bottom-0  text-center px-6 pb-5 pt-4 w-100 backgroud_blur">
+            <h5 className="card-title h4 text-neutral-900 mb-2">{title}</h5>
+            <p className="card-text">{content}</p>
+          </div>
+        </div>
+      </NavLink>
+    </>
   );
 }
 
