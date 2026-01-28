@@ -13,7 +13,7 @@ import Card_list from "../../component/Card_list";
 
 function Home() {
   return (
-    <div>
+    <>
       <section className="py-11 py-md-14 bg-neutral-100">
         <div className=" container">
           <div className="text-center mb-6 mb-md-13">
@@ -62,7 +62,7 @@ function Home() {
           <div>
             <h4 className="h4">新品上架</h4>
             <p className="mb-6">本週最新到貨，搶先擁有最美的綠意</p>
-            <div className="row row-cols-4 g-6 mb-12">
+            <div className="row row-cols-1 row-cols-md-4 g-6 mb-12">
               <div className="cols">
                 <Card_product product={product} />
               </div>
@@ -80,7 +80,7 @@ function Home() {
           <div>
             <h4 className="h4">本月熱銷排行</h4>
             <p className="mb-6">這些是本月最常被帶回家的植物，不太需要猶豫的選擇。</p>
-            <div className="row row-cols-4 g-6 mb-12">
+            <div className="row  row-cols-1 row-cols-md-4 g-6 mb-12">
               <div className="cols">
                 <Card_product product={product} />
               </div>
@@ -104,7 +104,7 @@ function Home() {
             <div className="articlr-left">
               <Card_article article={article} size="" />
             </div>
-            <div className="article-right">
+            <div className="article-right d-none d-md-block">
               <div className="mb-9">
                 <Card_article article={article} size="s" />
               </div>
@@ -116,26 +116,26 @@ function Home() {
       <section className="py-14 bg-neutral-100">
         <div className="container">
           <div className="px-14 py-3">
-            <div className="d-flex justify-content-center gap-14">
+            <div className="d-flex  flex-wrap  flex-lg-nowrap justify-content-center row-gap-8 column-gap-14">
               <img src={phone} className="phone" alt="儀表板" />
               <div className="d-flex flex-column pt-3 pb-5">
                 <div>
                   <h2 className="h2 mb-3">別忘了你的森活儀表板</h2>
                   <h4 className="h4 text-neutral-700">澆水、施肥、換盆日通通幫你記好，</h4>
-                  <h4 className="h4 text-neutral-700 mb-8">不用再靠記憶就能穩穩養好每一盆植物。</h4>
-                  <div className="d-flex gap-4 text-secondary-700">
+                  <h4 className="h4 text-neutral-700 mb-5 mb-md-8">不用再靠記憶就能穩穩養好每一盆植物。</h4>
+                  <div className="d-flex flex-wrap row-gap-2 column-gap-4 text-secondary-700">
                     <Pill title="澆水提醒" />
                     <Pill title="澆水提醒" />
                     <Pill title="澆水提醒" />
                     <Pill title="澆水提醒" />
                   </div>
                 </div>
-                <div className="mt-auto">
-                  <button type="button" className="btn btn-primary-700 me-5">
+                <div className="mt-8 mt-lg-auto d-flex flex-wrap align-items-center">
+                  <button type="button" className="btn btn-primary-700 me-lg-5">
                     前往我的森活儀表板
                   </button>
                   <NavLink to="/Personal" className="h6 fw-bold">
-                    看看我有哪些植物
+                    <span className="text-underline">看看我有哪些植物</span>
                   </NavLink>
                 </div>
               </div>
@@ -143,7 +143,7 @@ function Home() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
 

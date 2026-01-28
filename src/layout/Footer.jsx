@@ -1,10 +1,16 @@
+import mark from "/mark-w.svg";
+import { NavLink } from "react-router";
+
 function Footer() {
   return (
     <div className="bg-primary-500 py-12">
       <div className="container">
         <div className="row row-cols-1 row-cols-lg-2 text-white">
           <div className="col pe-15 mb-9 mb-lg-12">
-            <h3 className="mb-3">觀葉森活</h3>
+            <NavLink to="" className="h3 d-flex align-items-center mb-3">
+              <img src={mark} alt="logo" className="me-2" />
+              <span className="text-underline">觀葉森活</span>
+            </NavLink>
             <p className="text-secondary-100">讓養植物這件事，不只是「買一盆回家」，而是一步一步，把生活慢慢長成你喜歡的樣子，為城市生活打造的綠色角落，簡單、安心、有質感。</p>
           </div>
           <div className="col">
