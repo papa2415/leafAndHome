@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 import place_image from "/place.png";
 import phone from "/phone.png";
 
@@ -12,14 +14,14 @@ import Card_list from "../../component/Card_list";
 function Home() {
   return (
     <div>
-      <section className="py-14 bg-neutral-100">
+      <section className="py-11 py-md-14 bg-neutral-100">
         <div className=" container">
-          <div className="text-center mb-13">
-            <h2 className="h2 mb-6">從你的生活場景開始</h2>
+          <div className="text-center mb-6 mb-md-13">
+            <h2 className="h2 mb-md-6 mb-4">從你的生活場景開始</h2>
             <p className="h6 text-neutral-700">不知道該選什麼植物？告訴我們你想綠化的空間， </p>
             <p className="h6 text-neutral-700">我們為你推薦最適合的植栽方案。</p>
           </div>
-          <div className="row row-cols-4 g-6">
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-6">
             <div className="col">
               <Card_place image={place_image} title="租屋小套房" content="小空間也能綠意盎然" />
             </div>
@@ -35,21 +37,21 @@ function Home() {
           </div>
         </div>
       </section>
-      <section className="py-14 bg-neutral-200">
+      <section className="py-11 py-md-14 bg-neutral-200">
         <div className="container">
-          <div className="text-center  mb-13">
-            <h2 className="h2 mb-6">最適合新手的植物清單</h2>
+          <div className="text-center mb-6 mb-md-13">
+            <h2 className="h2 mb-md-6 mb-4">最適合新手的植物清單</h2>
             <p className="h6  text-neutral-700">我們根據新手最常見的需求，先幫你整理幾組『不容易失敗』的推薦清單</p>
           </div>
-          <div className="row row-cols-3">
+          <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3">
             <div className="col">
-              <Card_list />
+              <Card_list title="幾乎沒日照也能活" subTitle="適合幾乎沒日照空間的植物 TOP 5" />
             </div>
             <div className="col">
-              <Card_list />
+              <Card_list title="常常忘記澆水也沒關係" subTitle="最不怕你忘記澆水的植物 Top 5" />
             </div>
             <div className="col">
-              <Card_list />
+              <Card_list title="桌上只放得下一點點綠" subTitle="小桌面也放得下的迷你植栽 Top 5" />
             </div>
           </div>
         </div>
@@ -98,12 +100,14 @@ function Home() {
       <section className="py-14 bg-neutral-200">
         <div className="container">
           <h2 className="h2 text-center mb-12">森活誌精選</h2>
-          <div className="row">
-            <div className="col-8">
+          <div className="d-flex gap-9">
+            <div className="articlr-left">
               <Card_article article={article} size="" />
             </div>
-            <div className="col-4">
-              <Card_article article={article} size="s" />
+            <div className="article-right">
+              <div className="mb-9">
+                <Card_article article={article} size="s" />
+              </div>
               <Card_article article={article} size="s" />
             </div>
           </div>
@@ -114,15 +118,25 @@ function Home() {
           <div className="px-14 py-3">
             <div className="d-flex justify-content-center gap-14">
               <img src={phone} className="phone" alt="儀表板" />
-              <div className="pt-3 pb-5">
-                <h2 className="h2  mb-3">別忘了你的森活儀表板</h2>
-                <h4 className="h4 text-neutral-700">澆水、施肥、換盆日通通幫你記好，</h4>
-                <h4 className="h4 text-neutral-700 mb-8">不用再靠記憶就能穩穩養好每一盆植物。</h4>
-                <div className="d-flex gap-4 text-secondary-700">
-                  <Pill />
-                  <Pill />
-                  <Pill />
-                  <Pill />
+              <div className="d-flex flex-column pt-3 pb-5">
+                <div>
+                  <h2 className="h2 mb-3">別忘了你的森活儀表板</h2>
+                  <h4 className="h4 text-neutral-700">澆水、施肥、換盆日通通幫你記好，</h4>
+                  <h4 className="h4 text-neutral-700 mb-8">不用再靠記憶就能穩穩養好每一盆植物。</h4>
+                  <div className="d-flex gap-4 text-secondary-700">
+                    <Pill title="澆水提醒" />
+                    <Pill title="澆水提醒" />
+                    <Pill title="澆水提醒" />
+                    <Pill title="澆水提醒" />
+                  </div>
+                </div>
+                <div className="mt-auto">
+                  <button type="button" className="btn btn-primary-700 me-5">
+                    前往我的森活儀表板
+                  </button>
+                  <NavLink to="/Personal" className="h6 fw-bold">
+                    看看我有哪些植物
+                  </NavLink>
                 </div>
               </div>
             </div>
