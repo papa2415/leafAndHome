@@ -117,7 +117,7 @@ function Home() {
         <div className="container">
           <div className="px-14 py-3">
             <div className="d-flex  flex-wrap  flex-lg-nowrap justify-content-center row-gap-8 column-gap-14">
-              <img src={phone} className="phone" alt="儀表板" />
+              <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770040902658.png" className="phone" alt="儀表板" />
               <div className="d-flex flex-column pt-3 pb-5">
                 <div>
                   <h2 className="h2 mb-3">別忘了你的森活儀表板</h2>
