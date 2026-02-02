@@ -1,16 +1,13 @@
-# React + Vite
+# 觀葉森活
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 專案介紹
 
-Currently, two official plugins are available:
+讓養植物這件事，不只是「買一盆回家」，而是一步一步，把生活慢慢長成你喜歡的樣子，為城市生活打造的綠色角落，簡單、安心、有質感。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 開發人員
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [小趴]("#") - 首頁、後臺頁面切版、組長。
+- [PagaNiNi]("#") - 產品相關頁面規劃與 API 資料建立。
+- [Ryan]("#") - 購物車相關頁面規劃與 API 資料建立。
+- [Min]("#") - 文章頁相關頁面規劃與 API 資料建立。
+- [Valiela]("#") - 個人頁相關頁面規劃與 API 資料建立。
