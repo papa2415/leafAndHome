@@ -16,7 +16,6 @@ import Personal from "./pages/front/Personal.jsx";
 import Cart from "./pages/front/Cart.jsx";
 
 //後台
-import AdminHome from "./pages/admin/Home.jsx";
 import AdminCoupon from "./pages/admin/Coupon.jsx";
 import AdminOrder from "./pages/admin/Order.jsx";
 import AdminProducts from "./pages/admin/Products.jsx";
@@ -45,7 +44,6 @@ const routes = [
     path: "/admin",
     element: <AdminLayout />,
     children: [
-      { path: "", element: <AdminHome /> },
       { path: "update", element: <AdminUpdate /> },
       { path: "articles", element: <AdminArticles /> },
       { path: "coupon", element: <AdminCoupon /> },

@@ -1,10 +1,10 @@
 import { useOutletContext } from "react-router";
+import axios from "axios";
 
 function Articles() {
-  const { isAuth } = useOutletContext();
-  console.log(isAuth);
-  return <div></div>;
-  // return <>{isAuth ? "這是文章後台頁" : "請先登入"}</>;
+  const { token, API_BASE, API_PATH } = useOutletContext();
+
+  return <div>文章後台頁</div>;
 }
 
 export default Articles;

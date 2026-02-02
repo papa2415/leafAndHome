@@ -1,9 +1,10 @@
-import { Outlet, NavLink, useNavigate, useLocation } from "react-router";
+import { Outlet, NavLink, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
+const API_PATH = import.meta.env.VITE_API_PATH;
 
 function getCookie() {
   return document.cookie
@@ -13,50 +14,113 @@ function getCookie() {
 }
 
 function AdminLayout() {
-  const { pathname } = useLocation();
+  const [token, setToken] = useState(getCookie());
+  const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [token, setToken] = useState(() => getCookie() ?? "");
-  const [isAuth, setIsAuth] = useState(null);
+  //登入表單
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  //登入表單處理
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((data) => ({
+      ...data,
+      [name]: value,
+    }));
+  };
+
+  //登入
+  const onSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await axios.post(`${API_BASE}/admin/signin`, formData);
+      const { token, expired } = response.data;
+      document.cookie = `hexTokenAPI=${token};expires=${new Date(expired)};`;
+      setToken(getCookie());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    if (!token) {
+      //如果未取得token 則跳轉回admin進行登入
+      navigate("/admin", { replace: true });
+      return;
+    }
+    if (isAuth) {
+      //如果以驗證成功 則不重新驗證
+      return;
+    }
+    //如果取得token 則進行驗證
     const checkLogin = async () => {
-      //如果 取不到token 不打 API 驗證
-      if (!token) {
-        setIsAuth(false);
-        return;
-      }
       try {
         axios.defaults.headers.common["Authorization"] = token;
         const response = await axios.post(`${API_BASE}/api/user/check`);
         console.log(response.data);
         setIsAuth(true);
+        navigate("products", { replace: true });
       } catch (error) {
         setIsAuth(false);
-        navigate("/admin", { replace: true });
+        console.log(error);
       }
     };
     checkLogin();
-  }, [token, isAuth]);
-
-  //驗證失敗 跳回首頁
-  useEffect(() => {
-    const isAdminIndex = pathname === "/admin" || pathname === "/admin/";
-    if (isAuth === false && !isAdminIndex) {
-      navigate("/admin", { replace: true });
-    }
-  }, [isAuth, pathname, navigate]);
+  }, [token, navigate, isAuth]);
 
   return (
     <>
-      <NavLink to="">首頁</NavLink>
-      <NavLink to="update">上傳圖片</NavLink>
-      <NavLink to="order">訂單頁</NavLink>
-      <NavLink to="coupon">酷碰頁</NavLink>
-      <NavLink to="articles">文章頁</NavLink>
-      <NavLink to="products">產品頁面</NavLink>
-      <Outlet context={{ isAuth }} />
+      {!isAuth ? (
+        <>
+          <div className="container p-4">
+            <form onSubmit={(e) => onSubmit(e)}>
+              <div className="mb-3">
+                <label htmlFor="userName" className="form-label">
+                  帳號
+                </label>
+                <input type="email" name="username" className="form-control" id="userName" aria-describedby="userName" placeholder="email" value={formData.username} onChange={(e) => handleInputChange(e)} />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  密碼
+                </label>
+                <input type="password" name="password" className="form-control" id="password" placeholder="password" value={formData.password} onChange={(e) => handleInputChange(e)} />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                登入
+              </button>
+            </form>
+          </div>
+        </>
+      ) : (
+        <>
+          <header>
+            <div className="container">
+              <div className="d-flex justify-content-between py-4">
+                <NavLink to="products" className="px-4 py-2 h6">
+                  產品管理
+                </NavLink>
+                <NavLink to="articles" className="px-4 py-2 h6">
+                  文章管理
+                </NavLink>
+                <NavLink to="coupon" className="px-4 py-2 h6">
+                  酷碰管理
+                </NavLink>
+                <NavLink to="order" className="px-4 py-2 h6">
+                  訂單管理
+                </NavLink>
+                <NavLink to="update" className="px-4 py-2 h6">
+                  圖片管理
+                </NavLink>
+              </div>
+            </div>
+          </header>
+          <Outlet context={{ token, API_BASE, API_PATH }} />
+        </>
+      )}
     </>
   );
 }
