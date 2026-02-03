@@ -30,7 +30,7 @@ function Update() {
   return (
     <>
       <div className="py-11 py-md-14 bg-neutral-100">
-        <div className="container ">
+        <div className="container">
           <h3 className="h3 mb-5">請注意，僅限使用 jpg、jpeg 與 png 格式，檔案大小限制為 3MB 以下。</h3>
           <div className="mb-3">
             <label htmlFor="formFile" className="form-label h6 mb-3">
