@@ -1,7 +1,6 @@
 import { NavLink } from "react-router";
 
 import place_image from "/place.png";
-import phone from "/phone.png";
 
 import Card_place from "../../component/Card_place";
 import product from "/product.png";
@@ -10,11 +9,6 @@ import article from "/article.png";
 import Card_article from "../../component/Card_Article";
 import Pill from "../../component/Pill";
 import Card_list from "../../component/Card_list";
-import banner1 from "/banner1.png";
-import banner2_1 from "/banner2_1.png";
-import banner2_2 from "/banner2_2.png";
-import banner2_3 from "/banner2_3.png";
-import banner3 from "/banner3.png";
 
 function Home() {
   return (
@@ -28,7 +22,7 @@ function Home() {
           </div>
           <div className="carousel-inner">
             <div className="carousel-item active position-relative">
-              <img src={banner1} className="d-block w-100" alt="把一點綠，種進你的日常森活" />
+              <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770182941006.png" className="d-block w-100" alt="把一點綠，種進你的日常森活" />
               <div className="w-100 position-absolute z-1 top-50 start-50 translate-middle d-flex justify-content-center">
                 <div className="carousel-text text-center text-white">
                   <h1 className="h1 mb-5">把一點綠，種進你的日常森活</h1>
@@ -41,14 +35,14 @@ function Home() {
               </div>
             </div>
             <div className="carousel-item">
-              <div className="d-flex gap-1">
-                <img src={banner2_1} className="carousel-flex-image" alt="..." />
-                <img src={banner2_2} className="carousel-flex-image" alt="..." />
-                <img src={banner2_3} className="carousel-flex-image" alt="..." />
+              <div className="d-flex justify-content-between">
+                <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770182996909.png" className="carousel-flex-image" alt="..." />
+                <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770183024147.png" className="carousel-flex-image" alt="..." />
+                <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770183041746.png" className="carousel-flex-image" alt="..." />
               </div>
             </div>
             <div className="carousel-item">
-              <img src={banner3} className="d-block w-100" alt="..." />
+              <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770183075608.png" className="d-block w-100" alt="..." />
               <div className="w-100 position-absolute z-1 top-50 start-50 translate-middle d-flex justify-content-center">
                 <div className="carousel-text text-center text-white">
                   <h1 className="h1 mb-5">不會養植物也沒關係</h1>
@@ -68,11 +62,11 @@ function Home() {
             </div>
           </div>
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="carousel-control-prev-icon icon-hover" aria-hidden="true"></span>
             <span className="visually-hidden">Previous</span>
           </button>
           <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="carousel-control-next-icon icon-hover" aria-hidden="true"></span>
             <span className="visually-hidden">Next</span>
           </button>
         </div>
