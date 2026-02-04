@@ -1,5 +1,6 @@
 import { Children } from "react";
 // 導覽列
+import AuthLayout from "./layout/AuthLayout.jsx";
 import AdminLayout from "./layout/AdminLayout.jsx";
 import CartLayout from "./layout/CartLayout.jsx";
 import Layout from "./layout/Layout.jsx";
@@ -24,21 +25,28 @@ import AdminArticles from "./pages/admin/Articles.jsx";
 
 const routes = [
   {
-    //前台
     path: "/",
-    element: <Layout />,
+    element: <AuthLayout />, //登入認證
     children: [
-      { path: "", element: <Home /> },
-      { path: "about", element: <About /> },
-      { path: "articles", element: <Articles /> },
-      { path: "articles/:id", element: <Article /> },
-      { path: "products", element: <Products /> },
-      { path: "products:id", element: <Product /> },
-      { path: "personal", element: <Personal /> },
+      {
+        element: <Layout />,
+        children: [
+          { path: "", element: <Home /> },
+          { path: "about", element: <About /> },
+          { path: "articles", element: <Articles /> },
+          { path: "articles/:id", element: <Article /> },
+          { path: "products", element: <Products /> },
+          { path: "products/:id", element: <Product /> },
+          { path: "personal", element: <Personal /> },
+        ],
+      },
+      {
+        path: "cart",
+        element: <CartLayout />,
+        children: [{ path: "/cart", element: <Cart /> }],
+      },
     ],
   },
-  //購物車
-  { path: "/cart", element: <CartLayout />, children: [{ path: "/cart", element: <Cart /> }] },
   //後台
   {
     path: "/admin",

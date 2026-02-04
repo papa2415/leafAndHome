@@ -1,7 +1,8 @@
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, useOutletContext } from "react-router";
 import mark from "/mark.svg";
 
 function CartLayout() {
+  const { isAuth, setIsAuth } = useOutletContext();
   return (
     <>
       <header>
