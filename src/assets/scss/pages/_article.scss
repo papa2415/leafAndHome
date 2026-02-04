@@ -1,28 +1,31 @@
-.container {
-    max-width: 1076px;
-  }
-.text-gray-700 {
-  color: $gray-700;
+/* 強制標題固定高度為兩行 */
+.line-clamp-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 顯示兩行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 3em; /* 這裡的 3em 是根據 line-height 1.5 計算 (1.5 * 2) */
+  line-height: 1.5;
 }
-.text-gray-900 {
-  color: $gray-900;
+.italic {
+  font-style: italic;
 }
-/* 基礎排版與裝飾 */
-.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.italic { font-style: italic; }
-.shadow-xs { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-.hover-up:hover { transform: translateY(-8px); transition: 0.3s; }
-.hover-up-small:hover { transform: translateY(-3px); transition: 0.3s; }
 
-
-
-
-/* 品牌綠色調 */
-.text-success { color: #2D6A4F !important; }
-.border-success { border-color: #2D6A4F !important; }
+.hover-up:hover {
+  transform: translateY(-8px);
+  transition: 0.3s;
+}
+.hover-up-small:hover {
+  transform: translateY(-3px);
+  transition: 0.3s;
+}
 
 /* 元件特定樣式 */
-.avatar-circle { border-radius: 50%; object-fit: cover; background-color: #f8f9fa; }
+.avatar-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #f8f9fa;
+}
 
 .hero-section {
   height: 550px;
@@ -31,9 +34,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-   background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770003050852.png");
-  backgroundColor: "#6a7a69";
-  
+  background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770003050852.png");
+  background-color: "#6a7a69";
+
   /* 輔助：讓文字居中 */
   display: flex;
   align-items: center;
@@ -46,7 +49,10 @@
 .hero-section::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
@@ -55,9 +61,9 @@
   position: relative;
   z-index: 2; /* 讓文字在遮罩上面 */
 }
-.card-img{
-height:400px;
-  width: 100%;       /* 建議加上寬度確保填滿容器 */
+.card-img {
+  height: 400px;
+  width: 100%; /* 建議加上寬度確保填滿容器 */
   object-fit: cover; /* 修正連字號 */
 }
 
@@ -66,17 +72,25 @@ height:400px;
   white-space: pre-wrap;
 }
 
-.share-btn{
-   width: 35px;
-     height: 35px;
-    background-color: #A69880;
-   border-radius: 50%; 
-   border: none; 
-   display: flex; 
-   align-items: center;
-    justify-content: center; 
-    transition: 0.2s; color: white;
+.share-btn {
+  width: 35px;
+  height: 35px;
+  background-color: #a69880;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  color: white;
 }
 .rounded-custom {
   border-radius: 8px 40px 8px 8px;
+}
+.custom-txt-shadow {
+  /* 第一組：X:0, Y:4, Blur:65, #000000 40% */
+  /* 第二組：X:0, Y:0, Blur:12, #000000 35% */
+  text-shadow:
+    0px 4px 65px rgba(0, 0, 0, 0.4),
+    0px 0px 12px rgba(0, 0, 0, 0.35);
 }

@@ -2,48 +2,51 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useOutletContext, useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link } from "react-router-dom";
 
 function Article() {
   // 💡 如果你是用路由 (Route)，這裡會用 useParams 取得網址上的 id
   // 假設路由是 /article/:articleId
   //const { articleId } = useParams();
-// 1. 把網址抓到的 ID 暫時存到 urlId 裡
-const { articleId: urlId } = useParams();
-  const articleId = urlId || "-OjFbN8au2K1LWeWt0Vp";
   // --- **狀態管理 (State)** ---
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [articles, setArticles] = useState([]);
   // --- 身分與登入狀態 ---
-  const{isAuth,setIsAuth}=useOutletContext();
-  const [currentUser,setCurrentUser]=useState({userName:"綠手指小明"});
+  const { isAuth, setIsAuth } = useOutletContext();
+  const [currentUser, setCurrentUser] = useState({ userName: "綠手指小明" });
   // --- 留言輸入內容 ---
-  const[comment,setComment]=useState("");
- //大頭照判斷邏輯
- const AVATARS = [
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Bubba",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper"
-];
+  const [comment, setComment] = useState("");
+  const { id: articleId } = useParams();
+  //大頭照判斷邏輯
+  const AVATARS = [
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=Bubba",
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper",
+  ];
 
-// 根據名字計算固定頭像索引的工具
-const getFixedIndex = (str, length) => {
-  if (!str) return 0;
-  const charCodeSum = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return charCodeSum % length;
-};
+  // 根據名字計算固定頭像索引的工具
+  const getFixedIndex = (str, length) => {
+    if (!str) return 0;
+    const charCodeSum = str
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return charCodeSum % length;
+  };
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
   const API_PATH = "leafandhome";
   useEffect(() => {
+    setArticle(null);
     articlesData();
+    window.scrollTo(0, 0); // 捲回頂部
   }, [articleId]);
   const articlesData = async () => {
     setIsLoading(true);
     try {
       const [resDetail, resList] = await Promise.all([
         axios.get(`${API_BASE}/${API_PATH}/article/${articleId}`),
-        axios.get(`${API_BASE}/${API_PATH}/articles`)
+        axios.get(`${API_BASE}/${API_PATH}/articles`),
       ]);
 
       setArticle(resDetail.data.article);
@@ -71,7 +74,7 @@ const getFixedIndex = (str, length) => {
           return {
             ...item,
             //在item物件的物件裡面新增一個相同tag數量總計
-            score: sametag.length
+            score: sametag.length,
           };
         })
 
@@ -93,37 +96,37 @@ const getFixedIndex = (str, length) => {
     if (!text) return "";
     return text.replace(/<br\s*\/?>/gi, " ");
   };
-// --- 留言送出邏輯 ---
+  // --- 留言送出邏輯 ---
   // 3. 留言送出：React 是單向資料流，送出留言後，你要如何「不重新抓取 API」就讓畫面上出現新留言？
-const handleCommentSubmit=()=>{
-  //確定是否有內容才能送出
-  if(!comment.trim()){
-    alert("請輸入留言內容喔！");
-    return
-  }
-  //準備新留言物件
-  const newMsg={
-    userName:currentUser.userName,
-    content: comment,
-    create_at: Date.now() / 1000 // 產生秒級時間戳
-  }
-  //更新 article 狀態
-  const updatedBlocks=article.contentBlocks.map((block)=>{
-    if(block.type=="commentSection"){
-      return{
-        ...block,
-        //先展開comments內容才不會是整個陣列，會變一筆一筆留言物件，判斷如果沒有comments會傳一個空陣列
-        comments:[...(block.comments||[]),newMsg]
-      }
+  const handleCommentSubmit = () => {
+    //確定是否有內容才能送出
+    if (!comment.trim()) {
+      alert("請輸入留言內容喔！");
+      return;
     }
-    //如果type不是留言區的資料，就把資料保留回去
-    return block
-  })
-  //整筆資料更新進去
-  //先展開原本article資料，把剛剛updatedBlocks新的資料，更新進contentBlocks區塊內
-  setArticle({...article,contentBlocks:updatedBlocks});
-  setComment(""); // 清空留言處文字
-}
+    //準備新留言物件
+    const newMsg = {
+      userName: currentUser.userName,
+      content: comment,
+      create_at: Date.now() / 1000, // 產生秒級時間戳
+    };
+    //更新 article 狀態
+    const updatedBlocks = article.contentBlocks.map((block) => {
+      if (block.type == "commentSection") {
+        return {
+          ...block,
+          //先展開comments內容才不會是整個陣列，會變一筆一筆留言物件，判斷如果沒有comments會傳一個空陣列
+          comments: [...(block.comments || []), newMsg],
+        };
+      }
+      //如果type不是留言區的資料，就把資料保留回去
+      return block;
+    });
+    //整筆資料更新進去
+    //先展開原本article資料，把剛剛updatedBlocks新的資料，更新進contentBlocks區塊內
+    setArticle({ ...article, contentBlocks: updatedBlocks });
+    setComment(""); // 清空留言處文字
+  };
 
   // ---**事件處理 (Event Handlers)** ---
   //先處理「載入中」的狀態
@@ -137,8 +140,8 @@ const handleCommentSubmit=()=>{
       </div>
     );
   }
-  
-//分享功能
+
+  //分享功能
   const handleShare = (type) => {
     //當前瀏覽器完整網址
     const url = window.location.href;
@@ -146,16 +149,16 @@ const handleCommentSubmit=()=>{
       //用來開啟新視窗或新分頁的方法，encodeURIComponent()是網址編碼
       window.open(
         `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url
+          url,
         )}`,
-        "_blank"
+        "_blank",
       );
     } else if (type === "line") {
       window.open(
         `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(
-          url
+          url,
         )}`,
-        "_blank"
+        "_blank",
       );
     } else if (type === "copy") {
       //網頁有權限存取系統的複製.貼上功能，將網址變成字串寫入使用者的電腦剪貼簿中
@@ -165,18 +168,17 @@ const handleCommentSubmit=()=>{
   };
 
   //留言邏輯
-  
-  
+
   return (
     <div className="article-page">
       {/* hero區塊 */}
       <header className="hero-section">
         <div className="container text-center">
           <h1
-            className="display-4 fw-bold "
+            className="fw-bold mb-5 custom-txt-shadow"
             dangerouslySetInnerHTML={{ __html: article?.title }}
           ></h1>
-          <p>
+          <p className="fw-bold h5 custom-txt-shadow">
             作者:{article?.author} | 發布日期：
             {new Date(article?.create_at * 1000).toLocaleDateString()}
           </p>
@@ -184,212 +186,274 @@ const handleCommentSubmit=()=>{
       </header>
 
       {/*前言區 */}
-      <div className="container py-10">
-        <p className="lead text-dark opacity-75 mb-5 pb-4 border-bottom text-center lh-lg italic">
-          「 {article?.description} 」
-        </p>
+      <section className=" bg-neutral-100 pt-14 pb-15">
+        <div className="container py-10">
+          <p className="lead text-dark opacity-75 mb-12 pb-8  border-bottom text-center lh-lg italic">
+            「 {article?.description} 」
+          </p>
 
-        {/*文章內容區*/}
-        {article.contentBlocks?.map((block, index) => {
-          switch (block.type) {
-            case "heading":
-              return (
-                <h3
-                  key={index}
-                  className="fw-bold  mb-6 px-9 article-content text-gray-900"
-                  dangerouslySetInnerHTML={{ __html: block.content }}
-                ></h3>
-              );
-            case "paragraph":
-             {/*dangerouslySetInnerHTML可以把HTML標籤的字串轉為網頁標籤*/}
-              return (
-                <p
-                  key={index}
-                  className="article-content px-9 text-gray-700 fw-medium"
-                  dangerouslySetInnerHTML={{ __html: block.content }}
-                />
-              );
-            case "image":
-              return (
-                <figure key={index} className="img-fluid  my-12 text-center">
-                  <img
-                    src={block.imageUrl}
-                    alt={block.caption}
-                    className="img-fluid  rounded-custom"
+          {/*文章內容區*/}
+          {article.contentBlocks?.map((block, index) => {
+            switch (block.type) {
+              case "heading":
+                return (
+                  <h3
+                    key={index}
+                    className="fw-bold h4 mb-6 px-9 article-content text-neutral-900"
+                    dangerouslySetInnerHTML={{ __html: block.content }}
+                  ></h3>
+                );
+              case "paragraph":
+                {
+                  /*dangerouslySetInnerHTML可以把HTML標籤的字串轉為網頁標籤*/
+                }
+                return (
+                  <p
+                    key={index}
+                    className="article-content px-9 text-neutral-700 fw-medium"
+                    dangerouslySetInnerHTML={{ __html: block.content }}
                   />
-                  {block.caption && (
-                    <figcaption className="text-muted  mt-4 italic text-center">
-                     ——  {block.caption}
-                    </figcaption>
-                  )}
-                </figure>
-               
-              );  }
-        })}
-</div>
-  { /* 分享與標籤區 */}
-<div className="container">
-     <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 my-5 border-top border-bottom bg-light px-4 rounded-3">
-                    <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <span className="text-muted small fw-bold me-1">
-                        標籤：
-                      </span>
-                      {article.tag?.map((tag) => (
-                        <span
-                          key={tag}
-                          className="badge rounded-pill bg-success px-3 py-2"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
-                      <button
-                        className="btn rounded-circle share-btn"
-                        onClick={() => handleShare("fb")}
-                      >
-                        <i class="bi bi-facebook"></i>
-                      </button>
-                      <button
-                        className="btn rounded-circle share-btn"
-                        onClick={() => handleShare("line")}
-                      >
-                        <i class="bi bi-line"></i>
-                      </button>
-                      <button
-                        className="btn rounded-circle share-btn"
-                        onClick={() => handleShare("copy")}
-                      >
-                        <i class="bi bi-link-45deg"></i>
-                      </button>
+                );
+              case "image":
+                return (
+                  <figure key={index} className="img-fluid  my-12 text-center">
+                    <img
+                      src={block.imageUrl}
+                      alt={block.caption}
+                      className="img-fluid  rounded-custom"
+                    />
+                    {block.caption && (
+                      <figcaption className="text-muted  mt-4 italic text-center">
+                        —— {block.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                );
+            }
+          })}
+        </div>
+
+        {/* 分享與標籤區 */}
+
+        <div className="container">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center pt-7 mb-5  border-top  ">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <span className="text-muted small fw-bold me-1">標籤：</span>
+              {article.tag?.map((tag) => (
+                <span
+                  key={tag}
+                  className="badge rounded-pill bg-success px-3 py-2"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+            <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
+              <button
+                className="btn rounded-circle share-btn"
+                onClick={() => handleShare("fb")}
+              >
+                <i className="bi bi-facebook"></i>
+              </button>
+              <button
+                className="btn rounded-circle share-btn"
+                onClick={() => handleShare("line")}
+              >
+                <i className="bi bi-line"></i>
+              </button>
+              <button
+                className="btn rounded-circle share-btn"
+                onClick={() => handleShare("copy")}
+              >
+                <i className="bi bi-link-45deg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className=" bg-neutral-200 py-14">
+        <div className="container">
+          {article.contentBlocks?.map((block, index) => {
+            switch (block.type) {
+              case "relatedProducts":
+                return (
+                  <div key={index}>
+                    {/* 相關商品區 */}
+                    <h4 className="fw-bold mb-9 text-success border-start border-4 border-success ps-4">
+                      {block.title}
+                    </h4>
+                    <div className="row gy-5">
+                      {block.products?.map((product) => {
+                        return (
+                          <div
+                            key={product.productId}
+                            className="col-6 col-md-4"
+                          >
+                            <Link
+                              to={`/product/${product.productId}`}
+                              className="d-block w-100 text-decoration-none"
+                            >
+                              <div className="card  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                                <img
+                                  src={product.img}
+                                  className="card-img-top card-img radius-top-right"
+                                  alt={product.name}
+                                />
+                                <div className="card-body mt-4 line-clamp-title">
+                                  <p className="fw-bold ">{product.name}</p>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-               </div>
-
-         <div className="container">
-{article.contentBlocks?.map((block, index) => {
-          switch (block.type) {
-            case "relatedProducts":
-              return (
-                <div key={index}>
-               
-                  {/* 相關商品區 */}
-                  <h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
-                    {block.title}
-                  </h4>
-                  <div className="row mb-5">
-                    {block.products?.map((product) => {
-                      return (
-                        <div key={product.productId} className="col-6 col-md-4">
-                          <div className="card h-100 border-0 shadow-sm hover-up-small overflow-hidden">
-                            <img
-                              src={product.img}
-                              className="card-img-top card-img rounded-0"
-                              alt={product.name}
-                            />
-                            <div className="card-body">
-                              <p className="card-text small">{product.name}</p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                );
+            }
+          })}
+        </div>
+      </section>
+      {/* 推薦文章區 */}
+      <section className=" bg-neutral-100 py-14">
+        <div className="container">
+          <div className="row">
+            <h4 className="fw-bold mb-9 text-success border-start border-4 border-success ps-4">
+              更多成為綠手指的小祕訣
+            </h4>
+            {relatedArticles.map((item) => (
+              <div key={item.id} className="col-md-4 mb-3">
+                <Link
+                  to={`/articles/${item.id}`}
+                  className="d-block w-100 text-decoration-none"
+                >
+                  <div className="card  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                    <img
+                      src={item.image}
+                      className="card-img-top card-img radius-top-right "
+                      alt={formatPlainTitle(item.title)}
+                    />
+                    <div className="card-body mt-4">
+                      <h5 className="fw-bold mb-1 line-clamp-title">
+                        {formatPlainTitle(item.title)}
+                      </h5>
+                      <p
+                        className=" fw-semibold text-neutral-700"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: "2", // 限制顯示行數，多的變 ...
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          lineHeight: "1.5",
+                          minHeight: "3em", // 保持高度一致，避免卡片長短不一
+                        }}
+                      >
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* --- 7. 歷史留言列表 --- */}
+      <section className=" bg-neutral-200 py-14">
+        <div className="container">
+          <div className="text-center">
+            <h4 className="fw-bold mb-4 text-success  ps-3 mb-12 h2">
+              留言與討論
+            </h4>
+          </div>
+          {/* --- 8. 留言輸入表單 (條件渲染) --- */}
+          {/*篩選出留言區塊*/}
+          <div className="bg-white rounded-4">
+            {article.contentBlocks
+              ?.find((block) => block.type === "commentSection")
+              ?.comments?.map((c, index) => (
+                <div
+                  key={index}
+                  className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12"
+                >
+                  <div>
+                    <img
+                      src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]}
+                      className="rounded-circle border"
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        objectFit: "cover",
+                      }}
+                    />{" "}
+                  </div>
+                  <div>
+                    <p className="fw-bold h4 mb-4">{c.userName}</p>
+                    <p className="fw-medium text-neutral-700">{c.content}</p>
                   </div>
                 </div>
-              );
-          }
-        })}
-           </div>
-        {/* 推薦文章區 */}
-        <div className="container">
-        <div class="row">
-          <h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
-            更多成為綠手指的小祕訣
-          </h4>
-          {relatedArticles.map((article) => (
-            <div key={article.id} className="col-md-4 mb-3">
-              <div className="card card h-100 border-0 shadow-sm hover-up-small overflow-hidden">
-                <img
-                  src={article.image}
-                  className="card-img-top card-img rounded-0"
-                  alt={formatPlainTitle(article.title)}
-                />
-                <div className="card-body">
-                  <h6 className="card-text">
-                    {formatPlainTitle(article.title)}
-                  </h6>
-                  <p
-                    className="card-text small text-muted mb-0"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: "2", // 限制顯示行數，多的變 ...
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      lineHeight: "1.5",
-                      minHeight: "3em" // 保持高度一致，避免卡片長短不一
-                    }}
+              ))}
+            {isAuth ? (
+              /* ---已登入 --- */
+              <div className="py-9 px-12">
+                <div className="d-flex align-items-center  mb-6">
+                  <div
+                    className="avatar-wrapper rounded-circle overflow-hidden border border-2 border-white"
+                    style={{ width: "50px", height: "50px" }}
                   >
-                    {article.description}
-                  </p>
+                    <img
+                      src={
+                        AVATARS[
+                          getFixedIndex(currentUser.userName, AVATARS.length)
+                        ]
+                      }
+                      className="w-60 h-60"
+                    />
+                  </div>
+                  <span className="ms-4 fw-bold h4">
+                    {currentUser.userName}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <div className="form-floating mb-6">
+                    <textarea
+                      className="form-control"
+                      placeholder="分享您養護經驗或提出問題…"
+                      id="floatingTextarea"
+                      style={{ height: " 100px" }}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                    <label htmlFor="floatingTextarea">
+                      分享您養護經驗或提出問題…
+                    </label>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-white fw-bold py-2 px-6"
+                    onClick={() => handleCommentSubmit()}
+                  >
+                    送出留言
+                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        </div>
-       {/* --- 7. 歷史留言列表 --- */}
-        <div className="container">
-<h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
-           留言與討論
-          </h4>
-        {/* --- 8. 留言輸入表單 (條件渲染) --- */}
-        {/*篩選出留言區塊*/}
-        <div className="bg-light rounded-4">
-       {article.contentBlocks?.find(block=>block.type==="commentSection")?.comments?.map((c,index)=>(
-        <div key={index} className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12">
-          <div>
-          <img 
-        src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]} 
-        className="rounded-circle border"
-        style={{ width: '48px', height: '48px', objectFit: 'cover' }}
-      /> </div>
-      <div>
-        <p className="fw-bold h4 mb-4">{c.userName}</p>
-        <p className="fw-medium text-neutral-700">{c.content}</p>
-      </div>
-        </div>
-       ))}
-       {isAuth ?(
-        /* ---已登入 --- */
-        <div>
-          <div className="d-flex align-items-center">
-         <div className="avatar-wrapper shadow-sm rounded-circle overflow-hidden border border-2 border-white" style={{ width: '50px', height: '50px' }}>
-          <img 
-            src={AVATARS[getFixedIndex(currentUser.userName, AVATARS.length)]} 
-            className="w-100 h-100"
-          />
-        </div>
-        <span>{currentUser.userName}</span></div>
-        <div className="form-floating">
-  <textarea className="form-control" placeholder="分享您養護經驗或提出問題…" id="floatingTextarea" style={{height:" 100px"}} value={comment}
-        onChange={(e) => setComment(e.target.value)}/>
-  <label htmlFor="floatingTextarea">分享您養護經驗或提出問題…</label>
-</div>
-<button type="button" className="btn btn-primary-500 text-white">送出留言</button>
+            ) : (
+              <div className="guest-zone text-center py-4">
+                <p className="text-muted mb-3">想加入討論嗎？登入後即可留言</p>
+                <button
+                  className="btn btn-outline-success px-5 rounded-pill fw-bold"
+                  onClick={() => setIsAuth(true)}
+                >
+                  立即登入
+                </button>
+              </div>
+            )}
           </div>
-          
-       ):(<div className="guest-zone text-center py-4">
-              <p className="text-muted mb-3">想加入討論嗎？登入後即可留言</p>
-              <button className="btn btn-outline-success px-5 rounded-pill fw-bold" onClick={() => setIsAuth(true)}>
-                立即登入
-              </button>
-            </div>)}
-       </div>
-         
-       
-      </div>
+        </div>
+      </section>
     </div>
   );
-};
+}
 
 export default Article;
