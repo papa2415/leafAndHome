@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Article() {
@@ -14,12 +14,25 @@ const { articleId: urlId } = useParams();
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [articles, setArticles] = useState([]);
-  const [isLogin, setIsLogin] = useState(false);
   // --- 身分與登入狀態 ---
-  const [currentUser,setCurrentUser]=useState({userName:"綠手指小明"})
+  const{isAuth,setIsAuth}=useOutletContext();
+  const [currentUser,setCurrentUser]=useState({userName:"綠手指小明"});
   // --- 留言輸入內容 ---
   const[comment,setComment]=useState("");
- 
+ //大頭照判斷邏輯
+ const AVATARS = [
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Bubba",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper"
+];
+
+// 根據名字計算固定頭像索引的工具
+const getFixedIndex = (str, length) => {
+  if (!str) return 0;
+  const charCodeSum = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return charCodeSum % length;
+};
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
   const API_PATH = "leafandhome";
   useEffect(() => {
@@ -82,7 +95,35 @@ const { articleId: urlId } = useParams();
   };
 // --- 留言送出邏輯 ---
   // 3. 留言送出：React 是單向資料流，送出留言後，你要如何「不重新抓取 API」就讓畫面上出現新留言？
-
+const handleCommentSubmit=()=>{
+  //確定是否有內容才能送出
+  if(!comment.trim()){
+    alert("請輸入留言內容喔！");
+    return
+  }
+  //準備新留言物件
+  const newMsg={
+    userName:currentUser.userName,
+    content: comment,
+    create_at: Date.now() / 1000 // 產生秒級時間戳
+  }
+  //更新 article 狀態
+  const updatedBlocks=article.contentBlocks.map((block)=>{
+    if(block.type=="commentSection"){
+      return{
+        ...block,
+        //先展開comments內容才不會是整個陣列，會變一筆一筆留言物件，判斷如果沒有comments會傳一個空陣列
+        comments:[...(block.comments||[]),newMsg]
+      }
+    }
+    //如果type不是留言區的資料，就把資料保留回去
+    return block
+  })
+  //整筆資料更新進去
+  //先展開原本article資料，把剛剛updatedBlocks新的資料，更新進contentBlocks區塊內
+  setArticle({...article,contentBlocks:updatedBlocks});
+  setComment(""); // 清空留言處文字
+}
 
   // ---**事件處理 (Event Handlers)** ---
   //先處理「載入中」的狀態
@@ -188,12 +229,7 @@ const { articleId: urlId } = useParams();
 </div>
   { /* 分享與標籤區 */}
 <div className="container">
-{article.contentBlocks?.map((block, index) => {
-          switch (block.type) {
-            case "relatedProducts":
-              return (
-                <div key={index}>
-                  <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 my-5 border-top border-bottom bg-light px-4 rounded-3">
+     <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-4 my-5 border-top border-bottom bg-light px-4 rounded-3">
                     <div className="d-flex align-items-center gap-2 flex-wrap">
                       <span className="text-muted small fw-bold me-1">
                         標籤：
@@ -228,6 +264,15 @@ const { articleId: urlId } = useParams();
                       </button>
                     </div>
                   </div>
+               </div>
+
+         <div className="container">
+{article.contentBlocks?.map((block, index) => {
+          switch (block.type) {
+            case "relatedProducts":
+              return (
+                <div key={index}>
+               
                   {/* 相關商品區 */}
                   <h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
                     {block.title}
@@ -254,8 +299,9 @@ const { articleId: urlId } = useParams();
               );
           }
         })}
-
+           </div>
         {/* 推薦文章區 */}
+        <div className="container">
         <div class="row">
           <h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
             更多成為綠手指的小祕訣
@@ -290,9 +336,57 @@ const { articleId: urlId } = useParams();
             </div>
           ))}
         </div>
-        {/* 7. 留言列表: 找出 contentBlocks 中 type 為 commentSection 的區塊 */}
-    
-        {/* 8. 留言輸入表單: input (暱稱) 與 textarea (內容) */}
+        </div>
+       {/* --- 7. 歷史留言列表 --- */}
+        <div className="container">
+<h4 className="fw-bold mb-4 text-success border-start border-4 border-success ps-3">
+           留言與討論
+          </h4>
+        {/* --- 8. 留言輸入表單 (條件渲染) --- */}
+        {/*篩選出留言區塊*/}
+        <div className="bg-light rounded-4">
+       {article.contentBlocks?.find(block=>block.type==="commentSection")?.comments?.map((c,index)=>(
+        <div key={index} className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12">
+          <div>
+          <img 
+        src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]} 
+        className="rounded-circle border"
+        style={{ width: '48px', height: '48px', objectFit: 'cover' }}
+      /> </div>
+      <div>
+        <p className="fw-bold h4 mb-4">{c.userName}</p>
+        <p className="fw-medium text-neutral-700">{c.content}</p>
+      </div>
+        </div>
+       ))}
+       {isAuth ?(
+        /* ---已登入 --- */
+        <div>
+          <div className="d-flex align-items-center">
+         <div className="avatar-wrapper shadow-sm rounded-circle overflow-hidden border border-2 border-white" style={{ width: '50px', height: '50px' }}>
+          <img 
+            src={AVATARS[getFixedIndex(currentUser.userName, AVATARS.length)]} 
+            className="w-100 h-100"
+          />
+        </div>
+        <span>{currentUser.userName}</span></div>
+        <div className="form-floating">
+  <textarea className="form-control" placeholder="分享您養護經驗或提出問題…" id="floatingTextarea" style={{height:" 100px"}} value={comment}
+        onChange={(e) => setComment(e.target.value)}/>
+  <label htmlFor="floatingTextarea">分享您養護經驗或提出問題…</label>
+</div>
+<button type="button" className="btn btn-primary-500 text-white">送出留言</button>
+          </div>
+          
+       ):(<div className="guest-zone text-center py-4">
+              <p className="text-muted mb-3">想加入討論嗎？登入後即可留言</p>
+              <button className="btn btn-outline-success px-5 rounded-pill fw-bold" onClick={() => setIsAuth(true)}>
+                立即登入
+              </button>
+            </div>)}
+       </div>
+         
+       
       </div>
     </div>
   );
