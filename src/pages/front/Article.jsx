@@ -36,11 +36,6 @@ function Article() {
   };
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
   const API_PATH = "leafandhome";
-  useEffect(() => {
-    setArticle(null);
-    articlesData();
-    window.scrollTo(0, 0); // 捲回頂部
-  }, [articleId]);
   const articlesData = async () => {
     setIsLoading(true);
     try {
@@ -58,6 +53,11 @@ function Article() {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    setArticle(null);
+    articlesData();
+    window.scrollTo(0, 0); // 捲回頂部
+  }, [articleId]);
 
   // --- **資料處理邏輯** ---
   //推薦文章判斷
@@ -98,12 +98,18 @@ function Article() {
   };
   // --- 留言送出邏輯 ---
   // 3. 留言送出：React 是單向資料流，送出留言後，你要如何「不重新抓取 API」就讓畫面上出現新留言？
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("hexTokenAPI="))
+      ?.split("=")[1];
+    console.log("目前的 Token:", token);
     //確定是否有內容才能送出
     if (!comment.trim()) {
       alert("請輸入留言內容喔！");
       return;
     }
+
     //準備新留言物件
     const newMsg = {
       userName: currentUser.userName,
@@ -112,7 +118,7 @@ function Article() {
     };
     //更新 article 狀態
     const updatedBlocks = article.contentBlocks.map((block) => {
-      if (block.type == "commentSection") {
+      if (block.type === "commentSection") {
         return {
           ...block,
           //先展開comments內容才不會是整個陣列，會變一筆一筆留言物件，判斷如果沒有comments會傳一個空陣列
@@ -124,8 +130,21 @@ function Article() {
     });
     //整筆資料更新進去
     //先展開原本article資料，把剛剛updatedBlocks新的資料，更新進contentBlocks區塊內
-    setArticle({ ...article, contentBlocks: updatedBlocks });
-    setComment(""); // 清空留言處文字
+    const updatedData = { ...article, contentBlocks: updatedBlocks };
+    try {
+      await axios.put(
+        `${API_BASE}/${API_PATH}/admin/article/${articleId}`,
+        { data: updatedData },
+        {
+          headers: { Authorization: token }, // 把抓到的 token 放這裡
+        },
+      );
+      setArticle(updatedData);
+      setComment(""); // 清空留言處文字
+      alert("留言成功！");
+    } catch (err) {
+      console.error("儲存失敗", err);
+    }
   };
 
   // ---**事件處理 (Event Handlers)** ---
@@ -167,8 +186,6 @@ function Article() {
     }
   };
 
-  //留言邏輯
-
   return (
     <div className="article-page">
       {/* hero區塊 */}
@@ -188,280 +205,311 @@ function Article() {
       {/*前言區 */}
       <section className=" bg-neutral-100 pt-14 pb-15">
         <div className="container py-10">
-          <p className="lead text-dark opacity-75 mb-12 pb-8  border-bottom text-center lh-lg italic">
-            「 {article?.description} 」
-          </p>
+          <div className="content-limit">
+            <p className="lead text-dark opacity-75 mb-12 pb-8  border-bottom text-center lh-lg italic">
+              「 {article?.description} 」
+            </p>
 
-          {/*文章內容區*/}
-          {article.contentBlocks?.map((block, index) => {
-            switch (block.type) {
-              case "heading":
-                return (
-                  <h3
-                    key={index}
-                    className="fw-bold h4 mb-6 px-9 article-content text-neutral-900"
-                    dangerouslySetInnerHTML={{ __html: block.content }}
-                  ></h3>
-                );
-              case "paragraph":
-                {
-                  /*dangerouslySetInnerHTML可以把HTML標籤的字串轉為網頁標籤*/
-                }
-                return (
-                  <p
-                    key={index}
-                    className="article-content px-9 text-neutral-700 fw-medium"
-                    dangerouslySetInnerHTML={{ __html: block.content }}
-                  />
-                );
-              case "image":
-                return (
-                  <figure key={index} className="img-fluid  my-12 text-center">
-                    <img
-                      src={block.imageUrl}
-                      alt={block.caption}
-                      className="img-fluid  rounded-custom"
+            {/*文章內容區*/}
+            {article.contentBlocks?.map((block, index) => {
+              switch (block.type) {
+                case "heading":
+                  return (
+                    <h3
+                      key={index}
+                      className="fw-bold h4 mb-6 px-9 article-content text-neutral-900"
+                      dangerouslySetInnerHTML={{ __html: block.content }}
+                    ></h3>
+                  );
+                case "paragraph":
+                  {
+                    /*dangerouslySetInnerHTML可以把HTML標籤的字串轉為網頁標籤*/
+                  }
+                  return (
+                    <p
+                      key={index}
+                      className="article-content px-9 text-neutral-700 fw-medium"
+                      dangerouslySetInnerHTML={{ __html: block.content }}
                     />
-                    {block.caption && (
-                      <figcaption className="text-muted  mt-4 italic text-center">
-                        —— {block.caption}
-                      </figcaption>
-                    )}
-                  </figure>
-                );
-            }
-          })}
+                  );
+                case "image":
+                  return (
+                    <figure
+                      key={index}
+                      className="img-fluid  my-12 text-center"
+                    >
+                      <img
+                        src={block.imageUrl}
+                        alt={block.caption}
+                        className="img-fluid  rounded-custom"
+                      />
+                      {block.caption && (
+                        <figcaption className="text-muted  mt-4 italic text-center">
+                          —— {block.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+              }
+            })}
+          </div>
         </div>
-
         {/* 分享與標籤區 */}
-
         <div className="container">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center pt-7 mb-5  border-top  ">
-            <div className="d-flex align-items-center gap-2 flex-wrap">
-              <span className="text-muted small fw-bold me-1">標籤：</span>
-              {article.tag?.map((tag) => (
-                <span
-                  key={tag}
-                  className="badge rounded-pill bg-success px-3 py-2"
+          <div className="content-limit">
+            <div className="px-9 d-flex flex-column flex-md-row justify-content-between align-items-center pt-7 border-top  border-success-500 ">
+              <div className="d-flex align-items-center gap-2 flex-wrap">
+                <span className=" text-neutral-900  me-3">標籤：</span>
+                {article.tag?.map((tag) => (
+                  <span
+                    key={tag}
+                    className="btn btn btn-outline-primary-700 px-3 py-1 fw-bold rounded-3 border-1"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
+                <span className=" text-neutral-900  me-3">分享</span>
+                <button
+                  className="btn rounded-circle share-btn btn-secondary-500"
+                  onClick={() => handleShare("fb")}
                 >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-            <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
-              <button
-                className="btn rounded-circle share-btn"
-                onClick={() => handleShare("fb")}
-              >
-                <i className="bi bi-facebook"></i>
-              </button>
-              <button
-                className="btn rounded-circle share-btn"
-                onClick={() => handleShare("line")}
-              >
-                <i className="bi bi-line"></i>
-              </button>
-              <button
-                className="btn rounded-circle share-btn"
-                onClick={() => handleShare("copy")}
-              >
-                <i className="bi bi-link-45deg"></i>
-              </button>
+                  <i className="bi bi-facebook"></i>
+                </button>
+                <button
+                  className="btn rounded-circle share-btn btn-secondary-500"
+                  onClick={() => handleShare("line")}
+                >
+                  <i className="bi bi-line"></i>
+                </button>
+                <button
+                  className="btn rounded-circle share-btn btn-secondary-500"
+                  onClick={() => handleShare("copy")}
+                >
+                  <i className="bi bi-link-45deg"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
       <section className=" bg-neutral-200 py-14">
         <div className="container">
-          {article.contentBlocks?.map((block, index) => {
-            switch (block.type) {
-              case "relatedProducts":
-                return (
-                  <div key={index}>
-                    {/* 相關商品區 */}
-                    <h4 className="fw-bold mb-9 text-success border-start border-4 border-success ps-4">
-                      {block.title}
-                    </h4>
-                    <div className="row gy-5">
-                      {block.products?.map((product) => {
-                        return (
-                          <div
-                            key={product.productId}
-                            className="col-6 col-md-4"
-                          >
-                            <Link
-                              to={`/product/${product.productId}`}
-                              className="d-block w-100 text-decoration-none"
+          <div className="content-limit">
+            {article.contentBlocks?.map((block, index) => {
+              switch (block.type) {
+                case "relatedProducts":
+                  return (
+                    <div key={index}>
+                      {/* 相關商品區 */}
+                      <h4 className="fw-bold mb-9 text-primary-700 border-start border-4 border-success ps-4">
+                        {block.title}
+                      </h4>
+                      <div className="row gy-5">
+                        {block.products?.map((product) => {
+                          return (
+                            <div
+                              key={product.productId}
+                              className="col-6 col-md-4 d-flex
+                            "
                             >
-                              <div className="card  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
-                                <img
-                                  src={product.img}
-                                  className="card-img-top card-img radius-top-right"
-                                  alt={product.name}
-                                />
-                                <div className="card-body mt-4 line-clamp-title">
-                                  <p className="fw-bold ">{product.name}</p>
+                              <Link
+                                to={`/products/${product.productId}`}
+                                className="d-block w-100 text-decoration-none d-flex flex-column"
+                              >
+                                <div className="card h-100 d-flex flex-column border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                                  <img
+                                    src={product.img}
+                                    className="card-img-top card-img radius-top-right"
+                                    alt={product.name}
+                                  />
+
+                                  <div className="card-body mt-4  flex-grow-1">
+                                    <p className="fw-bold ">{product.name}</p>
+                                  </div>
                                 </div>
-                              </div>
-                            </Link>
-                          </div>
-                        );
-                      })}
+                              </Link>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-            }
-          })}
+                  );
+              }
+            })}
+          </div>
         </div>
       </section>
       {/* 推薦文章區 */}
-      <section className=" bg-neutral-100 py-14">
+      <section className=" bg-neutral-100 rec-articles-wrapper">
         <div className="container">
-          <div className="row">
-            <h4 className="fw-bold mb-9 text-success border-start border-4 border-success ps-4">
-              更多成為綠手指的小祕訣
-            </h4>
-            {relatedArticles.map((item) => (
-              <div key={item.id} className="col-md-4 mb-3">
-                <Link
-                  to={`/articles/${item.id}`}
-                  className="d-block w-100 text-decoration-none"
-                >
-                  <div className="card d-flex flex-column  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
-                    <img
-                      src={item.image}
-                      className="card-img-top card-img radius-top-right "
-                      alt={formatPlainTitle(item.title)}
-                    />
-             
-                 <div className="card-content mt-4 d-flex flex-column flex-grow-1">
-                      <h5 className="fw-bold mb-1">
-                        {formatPlainTitle(item.title)}
-                      </h5>
-<p className="fw-semibold text-neutral-700 line-clamp-desc mt-2">
-                        {item.description}
-                      </p>
-                      <div className="mt-auto"></div>
+          <div className="content-limit">
+            <div className="row">
+              <h4 className="fw-bold mb-9 text-primary-700 border-start border-4 border-success ps-4">
+                更多成為綠手指的小祕訣
+              </h4>
+              {relatedArticles.map((item) => (
+                <div key={item.id} className="col-md-4 mb-3 d-flex">
+                  <Link
+                    to={`/articles/${item.id}`}
+                    className="d-block w-100 text-decoration-none d-flex flex-column"
+                  >
+                    <div className="card d-flex flex-column  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                      <img
+                        src={item.image}
+                        className="card-img-top card-img radius-top-right "
+                        alt={formatPlainTitle(item.title)}
+                      />
+
+                      <div className="card-content mt-4 d-flex flex-column flex-grow-1">
+                        <div>
+                          <h5 className="fw-bold mb-1">
+                            {formatPlainTitle(item.title)}
+                          </h5>
+                        </div>
+                        <div className="mt-auto">
+                          <p className="fw-semibold text-neutral-700 line-clamp-desc mt-2 ">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
-      {/* --- 7. 歷史留言列表 --- */}
+      {/* --- 留言/電子報 --- */}
       <section className=" bg-neutral-200  bottom-section">
-    <div className="container subscription-wrapper">
-  <div className="card mb-3 custom-subscription-card">
-    <div className="row g-0">
-      <div className="col-md-7 left-content d-flex align-items-center">
-        <div className="card-body px-5">
-          <h2 className="card-title fw-bold">不想錯過養護秘訣？</h2>
-          <p className="card-text">訂閱我們的電子報，最新植物知識直接寄到你的信箱。</p>
-        </div>
-      </div>
-      
-      <div className="col-md-5 right-content d-flex align-items-center">
-        <div className="card-body px-4">
-          <div className="input-group">
-            <input type="email" className="form-control" placeholder="請輸入您的電子信箱"/>
-            <button className="btn btn-outline-light" type="button">立即訂閱</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-        <div className="container">
-          <div className="text-center">
-            <h4 className="fw-bold mb-4 ps-3 mb-12 h2">
-              留言與討論
-            </h4>
-          </div>
-          {/* --- 8. 留言輸入表單 (條件渲染) --- */}
-          {/*篩選出留言區塊*/}
-          <div className="bg-white rounded-4">
-            {article.contentBlocks
-              ?.find((block) => block.type === "commentSection")
-              ?.comments?.map((c, index) => (
-                <div
-                  key={index}
-                  className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12"
-                >
-                  <div>
-                    <img
-                      src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]}
-                      className="rounded-circle border"
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        objectFit: "cover",
-                      }}
-                    />{" "}
-                  </div>
-                  <div>
-                    <p className="fw-bold h4 mb-4">{c.userName}</p>
-                    <p className="fw-medium text-neutral-700">{c.content}</p>
-                  </div>
+        {/* 電子報 */}
+        <div className="container mb-14">
+          <div className="card mb-3 newsletter-wrapper">
+            <div className="row g-0">
+              <div className="col-md-6 rtl-8 rbl-8  py-13 px-8 newsletter-left radius-top-left  d-flex align-items-center">
+                <div className="card-body px-5">
+                  <h2 className="card-title fw-bold text-white custom-txt-shadow mb-3">
+                    不想錯過養護秘訣？
+                  </h2>
+                  <p className="card-text text-white custom-txt-shadow fw-bold">
+                    訂閱我們的電子報，最新植物知識直接寄到你的信箱。
+                  </p>
                 </div>
-              ))}
-            {isAuth ? (
-              /* ---已登入 --- */
-              <div className="py-9 px-12">
-                <div className="d-flex align-items-center  mb-6">
-                  <div
-                    className="avatar-wrapper rounded-circle overflow-hidden border border-2 border-white"
-                    style={{ width: "50px", height: "50px" }}
-                  >
-                    <img
-                      src={
-                        AVATARS[
-                          getFixedIndex(currentUser.userName, AVATARS.length)
-                        ]
-                      }
-                      className="w-60 h-60"
-                    />
-                  </div>
-                  <span className="ms-4 fw-bold h4">
-                    {currentUser.userName}
-                  </span>
-                </div>
-                <div className="text-center">
-                  <div className="form-floating mb-6">
-                    <textarea
-                      className="form-control"
-                      placeholder="分享您養護經驗或提出問題…"
-                      id="floatingTextarea"
-                      style={{ height: " 100px" }}
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                    />
-                    <label htmlFor="floatingTextarea">
-                      分享您養護經驗或提出問題…
-                    </label>
-                  </div>
+              </div>
 
-                  <button
-                    type="button"
-                    className="btn btn-primary-500 text-white fw-bold py-2 px-6"
-                    onClick={() => handleCommentSubmit()}
+              <div className="col-md-6 right-content py-13 px-8 d-flex align-items-center bg-primary-500 rtr-8 rbr-8">
+                <div className="card-body">
+                  <div className="d-flex">
+                    <input
+                      type="email"
+                      className="form-control  me-4"
+                      placeholder="請輸入您的電子信箱"
+                    />
+                    <button
+                      className="btn btn-outline-light-primary700 py-2 px-6 text-nowrap fw-bold"
+                      type="button"
+                    >
+                      立即訂閱
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 留言 */}
+        <div className="container commentSection-wrapper">
+          <div className="content-limit">
+            <div className="text-center">
+              <h4 className="fw-bold mb-4 ps-3 mb-12 h2">留言與討論</h4>
+            </div>
+            {/* --- 8. 留言輸入表單 (條件渲染) --- */}
+            {/*篩選出留言區塊*/}
+            <div className="bg-white rounded-4">
+              {article.contentBlocks
+                ?.find((block) => block.type === "commentSection")
+                ?.comments?.map((c, index) => (
+                  <div
+                    key={index}
+                    className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12"
                   >
-                    送出留言
+                    <div>
+                      <img
+                        src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]}
+                        className="rounded-circle border"
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          objectFit: "cover",
+                        }}
+                      />{" "}
+                    </div>
+                    <div>
+                      <p className="fw-bold h4 mb-4">{c.userName}</p>
+                      <p className="fw-medium text-neutral-700">{c.content}</p>
+                    </div>
+                  </div>
+                ))}
+              {isAuth ? (
+                /* ---已登入 --- */
+                <div className="py-9 px-12">
+                  <div className="d-flex align-items-center  mb-6">
+                    <div
+                      className="avatar-wrapper rounded-circle overflow-hidden border border-2 border-white"
+                      style={{ width: "50px", height: "50px" }}
+                    >
+                      <img
+                        src={
+                          AVATARS[
+                            getFixedIndex(currentUser.userName, AVATARS.length)
+                          ]
+                        }
+                        className="w-60 h-60"
+                      />
+                    </div>
+                    <span className="ms-4 fw-bold h4">
+                      {currentUser.userName}
+                    </span>
+                  </div>
+                  <div className="text-center">
+                    <div className="form-floating mb-6">
+                      <textarea
+                        className="form-control"
+                        placeholder="分享您養護經驗或提出問題…"
+                        id="floatingTextarea"
+                        style={{ height: " 100px" }}
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                      <label htmlFor="floatingTextarea">
+                        分享您養護經驗或提出問題…
+                      </label>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="btn btn-primary-500 text-white fw-bold py-2 px-6"
+                      onClick={() => handleCommentSubmit()}
+                    >
+                      送出留言
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="guest-zone text-center py-10">
+                  <p className="fw-bold mb-4">想加入討論嗎？登入後即可留言</p>
+                  <button
+                    className="btn btn-outline-primary-700 px-5 fw-bold"
+                    onClick={() => setIsAuth(true)}
+                  >
+                    立即登入
                   </button>
                 </div>
-              </div>
-            ) : (
-              <div className="guest-zone text-center py-4">
-                <p className="text-muted mb-3">想加入討論嗎？登入後即可留言</p>
-                <button
-                  className="btn btn-outline-success px-5 rounded-pill fw-bold"
-                  onClick={() => setIsAuth(true)}
-                >
-                  立即登入
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </section>

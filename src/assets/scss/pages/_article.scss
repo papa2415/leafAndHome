@@ -1,17 +1,13 @@
-/* 強制標題固定高度為兩行 */
-.line-clamp-title {
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 顯示兩行 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  height: 3em; /* 這裡的 3em 是根據 line-height 1.5 計算 (1.5 * 2) */
-  line-height: 1.5;
+.content-limit {
+  max-width: 1076px;
+  margin-left: auto;
+  margin-right: auto;
 }
 /* 強制描述文字固定為兩行 */
 .line-clamp-desc {
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.6;
 }
@@ -83,14 +79,11 @@
 .share-btn {
   width: 35px;
   height: 35px;
-  background-color: #a69880;
   border-radius: 50%;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.2s;
-  color: white;
 }
 .rounded-custom {
   border-radius: 8px 40px 8px 8px;
@@ -103,20 +96,82 @@
     0px 0px 12px rgba(0, 0, 0, 0.35);
 }
 .bottom-section {
-  padding-top: 100px; /* 給上方留出空間 */
-  position: relative;
+  padding-top: 120px; /* 給上方留出空間 */
 }
-.newsletter-box{
+.rec-articles-wrapper {
+  padding-top: 80px;
+  padding-bottom: 280px;
+}
+.newsletter-wrapper {
   margin: 0 auto;
-   max-width: 1296px;
-  margin-top: -150px; 
-  position: relative; 
+  max-width: 1296px;
+  margin-top: -240px;
+  position: relative;
   z-index: 10;
-  
-  /* 裝飾 */
-  display: flex;
-  padding: 40px;
 }
-.newsletter-img{
-background-image: url(http://localhost:5173/leafAndHome/banner1.png);
+.newsletter-card {
+  border: none;
+  overflow: hidden;
+}
+.newsletter-left {
+  background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770286789726.png");
+}
+/*白框+primary700文字按鈕*/
+.btn-outline-light-primary700 {
+  color: #f8f9fa;
+  border-color: #f8f9fa;
+  background-color: transparent;
+  transition: all 0.3s ease; /* 增加過渡動畫，視覺更平滑 */
+}
+
+/* 確保 hover, active, focus 狀態下顏色都一致 */
+.btn-outline-light-primary700:hover,
+.btn-outline-light-primary700:active {
+  background-color: #f8f9fa;
+  color: #3e5e4d;
+  border-color: #f8f9fa;
+  box-shadow: none; /* 移除點擊時的陰影藍圈 */
+}
+.btn-outline-light-primary700:focus-visible,
+.btn-outline-light-primary700:focus {
+  background-color: #f8f9fa;
+  color: #3e5e4d;
+  border-color: #f8f9fa;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(248, 249, 250, 0.5) !important;
+}
+
+.btn-secondary-500 {
+  background-color: #a69880;
+  border-color: #a69880;
+  color: #ffffff; /* 淺褐色背景通常搭配白色文字 */
+  transition: all 0.2s ease-in-out;
+}
+
+/*secondary-500按鈕*/
+.btn-secondary-500:hover {
+  background-color: #968972; /* 比原本顏色深一點點 */
+  border-color: #968972;
+  color: #ffffff;
+}
+
+.btn-secondary-500:active {
+  background-color: #8a7d68;
+  transform: translateY(1px); /* 點擊時下沉的小視覺效果 */
+}
+
+.btn-secondary-500:focus-visible,
+.btn-secondary-500:focus {
+  outline: 0;
+  /* 使用 50% 透明度的 secondary-500 顏色作為光暈 */
+  box-shadow: 0 0 0 0.25rem rgba(166, 152, 128, 0.5) !important;
+}
+
+.commentSection-wrapper {
+  padding-top: 80px;
+  padding-bottom: 120px;
+}
+
+.border-top.border-success-500 {
+  border-color: #a69880;
 }
