@@ -327,30 +327,22 @@ function Article() {
                   to={`/articles/${item.id}`}
                   className="d-block w-100 text-decoration-none"
                 >
-                  <div className="card  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                  <div className="card d-flex flex-column  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
                     <img
                       src={item.image}
                       className="card-img-top card-img radius-top-right "
                       alt={formatPlainTitle(item.title)}
                     />
-                    <div className="card-body mt-4">
-                      <h5 className="fw-bold mb-1 line-clamp-title">
+             
+                 <div className="card-content mt-4 d-flex flex-column flex-grow-1">
+                      <h5 className="fw-bold mb-1">
                         {formatPlainTitle(item.title)}
                       </h5>
-                      <p
-                        className=" fw-semibold text-neutral-700"
-                        style={{
-                          display: "-webkit-box",
-                          WebkitLineClamp: "2", // 限制顯示行數，多的變 ...
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          lineHeight: "1.5",
-                          minHeight: "3em", // 保持高度一致，避免卡片長短不一
-                        }}
-                      >
+<p className="fw-semibold text-neutral-700 line-clamp-desc mt-2">
                         {item.description}
                       </p>
-                    </div>
+                      <div className="mt-auto"></div>
+                      </div>
                   </div>
                 </Link>
               </div>
@@ -359,10 +351,31 @@ function Article() {
         </div>
       </section>
       {/* --- 7. 歷史留言列表 --- */}
-      <section className=" bg-neutral-200 py-14">
+      <section className=" bg-neutral-200  bottom-section">
+    <div className="container subscription-wrapper">
+  <div className="card mb-3 custom-subscription-card">
+    <div className="row g-0">
+      <div className="col-md-7 left-content d-flex align-items-center">
+        <div className="card-body px-5">
+          <h2 className="card-title fw-bold">不想錯過養護秘訣？</h2>
+          <p className="card-text">訂閱我們的電子報，最新植物知識直接寄到你的信箱。</p>
+        </div>
+      </div>
+      
+      <div className="col-md-5 right-content d-flex align-items-center">
+        <div className="card-body px-4">
+          <div className="input-group">
+            <input type="email" className="form-control" placeholder="請輸入您的電子信箱"/>
+            <button className="btn btn-outline-light" type="button">立即訂閱</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
         <div className="container">
           <div className="text-center">
-            <h4 className="fw-bold mb-4 text-success  ps-3 mb-12 h2">
+            <h4 className="fw-bold mb-4 ps-3 mb-12 h2">
               留言與討論
             </h4>
           </div>
