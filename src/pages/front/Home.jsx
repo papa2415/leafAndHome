@@ -35,7 +35,7 @@ function Home() {
               </div>
             </div>
             <div className="carousel-item">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between bg-neutral-100">
                 <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770182996909.png" className="carousel-flex-image" alt="..." />
                 <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770183024147.png" className="carousel-flex-image" alt="..." />
                 <img src="https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770183041746.png" className="carousel-flex-image" alt="..." />
