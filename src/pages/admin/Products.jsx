@@ -56,7 +56,7 @@ function Products() {
         origin_price: Number(templateData.origin_price),
         price: Number(templateData.price),
         is_enabled: templateData.is_enabled ? 1 : 0,
-        imageUrl: [...templateData.imagesUrl.filter((url) => url !== "")],
+        imagesUrl: [...templateData.imagesUrl.filter((url) => url !== "")],
       },
     };
     try {
