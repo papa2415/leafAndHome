@@ -421,7 +421,7 @@ function Article() {
         </div>
 
         {/* 留言 */}
-        <div className="container commentSection-wrapper">
+        <div className="container content-wrapper">
           <div className="content-limit">
             <div className="text-center">
               <h4 className="fw-bold mb-4 ps-3 mb-12 h2">留言與討論</h4>

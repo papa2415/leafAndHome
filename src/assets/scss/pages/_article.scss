@@ -66,9 +66,9 @@
   z-index: 2; /* 讓文字在遮罩上面 */
 }
 .card-img {
-  height: 400px;
+  height: 250px;
   width: 100%; /* 建議加上寬度確保填滿容器 */
-  object-fit: cover; /* 修正連字號 */
+  object-fit: cover; 
 }
 
 .article-content {
@@ -167,11 +167,17 @@
   box-shadow: 0 0 0 0.25rem rgba(166, 152, 128, 0.5) !important;
 }
 
-.commentSection-wrapper {
+.content-wrapper {
   padding-top: 80px;
   padding-bottom: 120px;
 }
 
 .border-top.border-success-500 {
   border-color: #a69880;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
