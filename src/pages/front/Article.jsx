@@ -191,23 +191,23 @@ function Article() {
     <div className="article-page">
       {/* hero區塊 */}
       <header className="hero-section">
-        <div className="container text-center">
+        <div className="container text-md-center px-7 px-md-0">
           <h1
             className="fw-bold mb-5 custom-txt-shadow"
             dangerouslySetInnerHTML={{ __html: article?.title }}
           ></h1>
           <p className="fw-bold h5 custom-txt-shadow">
-            作者:{article?.author} | 發布日期：
+            作者:{article?.author} <span className="d-none d-md-inline-block mx-2">|</span> 發布日期：
             {new Date(article?.create_at * 1000).toLocaleDateString()}
           </p>
         </div>
       </header>
 
       {/*前言區 */}
-      <section className=" bg-neutral-100 pt-14 pb-15">
-        <div className="container py-10">
+      <section className=" bg-neutral-100 ">
+        <div className="container py-11 pt-md-14 pb-md-15">
           <div className="content-limit">
-            <p className="lead text-dark opacity-75 mb-12 pb-8  border-bottom text-center lh-lg italic">
+            <p className="lead text-dark opacity-75 fs-7  mb-8 mb-md-12 pb-4 pb-md-8  border-bottom text-center lh-lg italic">
               「 {article?.description} 」
             </p>
 
@@ -218,7 +218,7 @@ function Article() {
                   return (
                     <h3
                       key={index}
-                      className="fw-bold h4 mb-6 px-9 article-content text-neutral-900"
+                      className="fw-bold h4 mb-6 px-md-9 article-content text-neutral-900"
                       dangerouslySetInnerHTML={{ __html: block.content }}
                     ></h3>
                   );
@@ -229,7 +229,7 @@ function Article() {
                   return (
                     <p
                       key={index}
-                      className="article-content px-9 text-neutral-700 fw-medium"
+                      className="article-content px-md-9 text-neutral-700 fw-medium"
                       dangerouslySetInnerHTML={{ __html: block.content }}
                       style={{ whiteSpace: "pre-wrap" }}
                     />
@@ -238,7 +238,7 @@ function Article() {
                   return (
                     <figure
                       key={index}
-                      className="img-fluid  my-12 text-center"
+                      className="img-fluid my-9  my-md-12 text-center"
                     >
                       <img
                         src={block.imageUrl}
@@ -255,49 +255,53 @@ function Article() {
               }
             })}
           </div>
-        </div>
+        
         {/* 分享與標籤區 */}
-        <div className="container">
-          <div className="content-limit">
-            <div className="px-9 d-flex flex-column flex-md-row justify-content-between align-items-center pt-7 border-top  border-success-500 ">
-              <div className="d-flex align-items-center gap-2 flex-wrap">
+    
+          <div className="content-limit mt-9 mt-md-10">
+            <div className="px-md-9 d-flex flex-column flex-md-row justify-content-between align-items-md-center pt-7 border-top  border-success-500 ">
+              <div className="mb-9 mb-md-0 d-flex">
                 <span className=" text-neutral-900  me-3">標籤：</span>
+                <div className="d-flex align-items-center gap-2 flex-wrap ">
                 {article.tag?.map((tag) => (
                   <Link
                     key={tag}
-                    className="btn btn btn-outline-primary-700 px-3 py-1 fw-bold rounded-3 border-1"
+                    className="btn btn btn-outline-primary-700 fs-8 px-3 py-1 fw-bold rounded-3 border-1"
                     to={`/articles?tag=${tag}`}
                   >
                     #{tag}
                   </Link>
-                ))}
+                ))}</div>
               </div>
-              <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
-                <span className=" text-neutral-900  me-3">分享</span>
+              <div className="d-flex align-items-center">
+                 <span className=" text-neutral-900  me-3">分享</span>
+                <div className="d-flex align-items-center gap-3">
+               
                 <button
-                  className="btn rounded-circle share-btn btn-secondary-500"
+                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
                   onClick={() => handleShare("fb")}
                 >
                   <i className="bi bi-facebook"></i>
                 </button>
                 <button
-                  className="btn rounded-circle share-btn btn-secondary-500"
+                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
                   onClick={() => handleShare("line")}
                 >
                   <i className="bi bi-line"></i>
                 </button>
                 <button
-                  className="btn rounded-circle share-btn btn-secondary-500"
+                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
                   onClick={() => handleShare("copy")}
                 >
                   <i className="bi bi-link-45deg"></i>
                 </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section className=" bg-neutral-200 py-14">
+      <section className=" bg-neutral-200 py-11 py-md-14">
         <div className="container">
           <div className="content-limit">
             {article.contentBlocks?.map((block, index) => {
@@ -306,7 +310,7 @@ function Article() {
                   return (
                     <div key={index}>
                       {/* 相關商品區 */}
-                      <h4 className="fw-bold mb-9 text-primary-700 border-start border-4 border-success ps-4">
+                      <h4 className="fw-bold mb-6 mb-md-9 text-primary-700 border-start border-4 border-success ps-4">
                         {block.title}
                       </h4>
                       <div className="row gy-5">
@@ -314,7 +318,7 @@ function Article() {
                           return (
                             <div
                               key={product.productId}
-                              className="col-6 col-md-4 d-flex
+                              className=" col-md-4 d-flex
                             "
                             >
                               <Link
