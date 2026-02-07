@@ -20,10 +20,10 @@ function Article() {
   const { id: articleId } = useParams();
   //大頭照判斷邏輯
   const AVATARS = [
-    "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-    "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-    "https://api.dicebear.com/7.x/avataaars/svg?seed=Bubba",
-    "https://api.dicebear.com/7.x/avataaars/svg?seed=Jasper",
+    "https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770437893922.png",
+    "https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770437920064.png",
+    "https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770437938518.png",
+    "https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770437961135.png",
   ];
 
   // 根據名字計算固定頭像索引的工具
@@ -31,7 +31,7 @@ function Article() {
     if (!str) return 0;
     const charCodeSum = str
       .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  .reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1), 0);
     return charCodeSum % length;
   };
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
@@ -99,11 +99,10 @@ function Article() {
   // --- 留言送出邏輯 ---
   // 3. 留言送出：React 是單向資料流，送出留言後，你要如何「不重新抓取 API」就讓畫面上出現新留言？
   const handleCommentSubmit = async () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("hexTokenAPI="))
-      ?.split("=")[1];
-    console.log("目前的 Token:", token);
+    // const token = document.cookie
+    //   .split("; ")
+    //   .find((row) => row.startsWith("hexTokenAPI="))
+    //   ?.split("=")[1];
     //確定是否有內容才能送出
     if (!comment.trim()) {
       alert("請輸入留言內容喔！");
@@ -131,20 +130,22 @@ function Article() {
     //整筆資料更新進去
     //先展開原本article資料，把剛剛updatedBlocks新的資料，更新進contentBlocks區塊內
     const updatedData = { ...article, contentBlocks: updatedBlocks };
-    try {
-      await axios.put(
-        `${API_BASE}/${API_PATH}/admin/article/${articleId}`,
-        { data: updatedData },
-        {
-          headers: { Authorization: token }, // 把抓到的 token 放這裡
-        },
-      );
-      setArticle(updatedData);
+    // try {
+    //   await axios.put(
+    //     `${API_BASE}/${API_PATH}/admin/article/${articleId}`,
+    //     { data: updatedData },
+    //     {
+    //       headers: { Authorization: token }, // 把抓到的 token 放這裡
+    //     },
+    //   );
+    //   setArticle(updatedData);
+    //   setComment(""); // 清空留言處文字
+    //   alert("留言成功！");
+    // } catch (err) {
+    //   console.error("儲存失敗", err);
+    // }
+    setArticle(updatedData);
       setComment(""); // 清空留言處文字
-      alert("留言成功！");
-    } catch (err) {
-      console.error("儲存失敗", err);
-    }
   };
 
   // ---**事件處理 (Event Handlers)** ---
@@ -230,6 +231,7 @@ function Article() {
                       key={index}
                       className="article-content px-9 text-neutral-700 fw-medium"
                       dangerouslySetInnerHTML={{ __html: block.content }}
+                      style={{ whiteSpace: "pre-wrap" }}
                     />
                   );
                 case "image":
@@ -261,12 +263,13 @@ function Article() {
               <div className="d-flex align-items-center gap-2 flex-wrap">
                 <span className=" text-neutral-900  me-3">標籤：</span>
                 {article.tag?.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
                     className="btn btn btn-outline-primary-700 px-3 py-1 fw-bold rounded-3 border-1"
+                    to={`/articles?tag=${tag}`}
                   >
                     #{tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
               <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
@@ -436,16 +439,12 @@ function Article() {
                     key={index}
                     className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12"
                   >
-                    <div>
+                    <div className="avatar-circle rounded-circle">
                       <img
                         src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]}
-                        className="rounded-circle border"
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          objectFit: "cover",
-                        }}
-                      />{" "}
+                        className="avatar-img"
+                     
+                      />
                     </div>
                     <div>
                       <p className="fw-bold h4 mb-4">{c.userName}</p>
@@ -458,8 +457,8 @@ function Article() {
                 <div className="py-9 px-12">
                   <div className="d-flex align-items-center  mb-6">
                     <div
-                      className="avatar-wrapper rounded-circle overflow-hidden border border-2 border-white"
-                      style={{ width: "50px", height: "50px" }}
+                      className="avatar-circle rounded-circle overflow-hidden"
+                      
                     >
                       <img
                         src={
@@ -467,7 +466,7 @@ function Article() {
                             getFixedIndex(currentUser.userName, AVATARS.length)
                           ]
                         }
-                        className="w-60 h-60"
+                        className="avatar-img"
                       />
                     </div>
                     <span className="ms-4 fw-bold h4">

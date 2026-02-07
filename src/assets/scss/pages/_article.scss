@@ -26,9 +26,19 @@
 
 /* 元件特定樣式 */
 .avatar-circle {
-  border-radius: 50%;
   object-fit: cover;
   background-color: #f8f9fa;
+  height: 60px;
+  width: 60px;
+  display: flex;
+  justify-content: center; 
+  align-items: flex-end;  
+border: 1.5px solid #538369;
+}
+.avatar-img {
+  object-fit: cover;
+  height: auto;
+  width: 35px;
 }
 
 .hero-section {
@@ -40,14 +50,13 @@
   background-size: cover;
   background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770003050852.png");
   background-color: "#6a7a69";
-
-  /* 輔助：讓文字居中 */
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   position: relative;
 }
+
 
 /* 加上一個深色遮罩，避免圖片太亮看不到字 */
 .hero-section::before {

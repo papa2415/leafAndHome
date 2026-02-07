@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 const categories = [
   "全部",
@@ -14,7 +15,11 @@ const categories = [
 function Articles() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTag, setSelectedTag] = useState("全部");
+  // --- useSearchParams 取得單一文章頁網址參數 ---
+  const[searchParams]=useSearchParams();
+  const tagUrl=searchParams.get("tag");// 使用 .get() 取得參數
+  // 單一文章頁，如果網址有 tag 就用網址的，沒有就用 "全部"
+  const [selectedTag, setSelectedTag] = useState(tagUrl||"全部");
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
   const API_PATH = "leafandhome";
   //處理文字斷行邏輯，客製化移除br
@@ -34,11 +39,16 @@ function Articles() {
       setIsLoading(false);
     }
   };
+
+ 
   useEffect(() => {
     setArticles([]);
     articlesData();
+    if(tagUrl){
+      setSelectedTag(tagUrl)
+    }
     window.scrollTo(0, 0); // 捲回頂部
-  }, []);
+  }, [tagUrl]);
 
   const filteredArticles = articles.filter((item) => {
     if (selectedTag === "全部") return true;
