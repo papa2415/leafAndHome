@@ -16,10 +16,10 @@ function Articles() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   // --- useSearchParams 取得單一文章頁網址參數 ---
-  const[searchParams]=useSearchParams();
-  const tagUrl=searchParams.get("tag");// 使用 .get() 取得參數
+  const [searchParams] = useSearchParams();
+  const tagUrl = searchParams.get("tag"); // 使用 .get() 取得參數
   // 單一文章頁，如果網址有 tag 就用網址的，沒有就用 "全部"
-  const [selectedTag, setSelectedTag] = useState(tagUrl||"全部");
+  const [selectedTag, setSelectedTag] = useState(tagUrl || "全部");
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
   const API_PATH = "leafandhome";
   //處理文字斷行邏輯，客製化移除br
@@ -40,12 +40,11 @@ function Articles() {
     }
   };
 
- 
   useEffect(() => {
     setArticles([]);
     articlesData();
-    if(tagUrl){
-      setSelectedTag(tagUrl)
+    if (tagUrl) {
+      setSelectedTag(tagUrl);
     }
     window.scrollTo(0, 0); // 捲回頂部
   }, [tagUrl]);
@@ -68,21 +67,43 @@ function Articles() {
   }
   return (
     <>
-      <div className="container">
-        <div className="d-flex">
-          {categories.map((tag) => (
-            <button
-              key={tag}
-              className={`btn  px-4 ${selectedTag === tag ? "btn-primary-700" : "btn-outline-primary-700"}`}
-              onClick={() => setSelectedTag(tag)}
-            >
-              {tag}
-            </button>
-          ))}
+      <header className="articles-hero-section">
+        <div className="container text-md-center px-7 px-md-0">
+          <h1 className="fw-bold mb-5 custom-txt-shadow">生活日常誌</h1>
+          <p className="fw-bold h5 custom-txt-shadow">
+            探索​植物​的​療癒​力量，​給​新手​的​養植​指南
+          </p>
+          <div className="d-flex gap-2 justify-content-md-center mt-5 flex-wrap">
+            {categories.map((tag) => (
+              <button
+                key={tag}
+                className={`btn px-2  px-md-4 btn-category-min ${selectedTag === tag ? "btn-primary-700" : "btn-secondary-100 "}`}
+                onClick={() => setSelectedTag(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </header>
+
       <section className=" bg-neutral-200">
         <div className="container content-wrapper">
+          {/* 1. 確保外層有一個 row */}
+          <div className="row mb-8 justify-content-md-end">
+            <div className="col-12 col-md-4">
+              <div className="custom-search-group input-group rounded-3 ">
+                <span className="input-group-text border-0 bg-transparent pe-0">
+                  <i className="bi bi-search text-primary-700 fw-bold"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control border-0 shadow-none  bg-transparent py-2"
+                  placeholder="綠手指小秘訣"
+                />
+              </div>
+            </div>
+          </div>
           <div className="row gy-3">
             {filteredArticles.map((item) => (
               <div key={item.id} className="col-md-4 mb-3 d-flex">
@@ -90,7 +111,7 @@ function Articles() {
                   to={`/articles/${item.id}`}
                   className="d-block w-100 text-decoration-none d-flex flex-column"
                 >
-                  <div className="card d-flex flex-column  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-3">
+                  <div className="card d-flex flex-column  h-100 border-0 radius-top-right  hover-up-small overflow-hidden p-4">
                     <img
                       src={item.image}
                       className="card-img-top card-img radius-top-right "

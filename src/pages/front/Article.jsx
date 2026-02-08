@@ -31,7 +31,7 @@ function Article() {
     if (!str) return 0;
     const charCodeSum = str
       .split("")
-  .reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1), 0);
+      .reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1), 0);
     return charCodeSum % length;
   };
   const API_BASE = "https://vue3-course-api.hexschool.io/v2/api";
@@ -54,11 +54,17 @@ function Article() {
     }
   };
   useEffect(() => {
-    setArticle(null);
-    articlesData();
-    window.scrollTo(0, 0); // 捲回頂部
-  }, [articleId]);
+    const loadPageData = async () => {
+      //設定狀態
+      setArticle(null);
+      window.scrollTo(0, 0); // 第一次捲動：立刻跳回頂部
 
+      //等待資料抓取完成
+      await articlesData();
+      window.scrollTo(0, 0);
+    };
+    loadPageData(); // 執行它
+  }, [articleId]);
   // --- **資料處理邏輯** ---
   //推薦文章判斷
   const relatedArticles = useMemo(() => {
@@ -145,7 +151,7 @@ function Article() {
     //   console.error("儲存失敗", err);
     // }
     setArticle(updatedData);
-      setComment(""); // 清空留言處文字
+    setComment(""); // 清空留言處文字
   };
 
   // ---**事件處理 (Event Handlers)** ---
@@ -188,7 +194,7 @@ function Article() {
   };
 
   return (
-    <div className="article-page">
+    <>
       {/* hero區塊 */}
       <header className="hero-section">
         <div className="container text-md-center px-7 px-md-0">
@@ -197,8 +203,12 @@ function Article() {
             dangerouslySetInnerHTML={{ __html: article?.title }}
           ></h1>
           <p className="fw-bold h5 custom-txt-shadow">
-            作者:{article?.author} <span className="d-none d-md-inline-block mx-2">|</span> 發布日期：
-            {new Date(article?.create_at * 1000).toLocaleDateString()}
+            作者:{article?.author}{" "}
+            <span className="d-none d-md-inline-block mx-2">|</span>
+            <span className="d-block d-md-inline-block">
+              發布日期：
+              {new Date(article?.create_at * 1000).toLocaleDateString()}
+            </span>
           </p>
         </div>
       </header>
@@ -255,46 +265,46 @@ function Article() {
               }
             })}
           </div>
-        
-        {/* 分享與標籤區 */}
-    
+
+          {/* 分享與標籤區 */}
+
           <div className="content-limit mt-9 mt-md-10">
             <div className="px-md-9 d-flex flex-column flex-md-row justify-content-between align-items-md-center pt-7 border-top  border-success-500 ">
               <div className="mb-9 mb-md-0 d-flex">
                 <span className=" text-neutral-900  me-3">標籤：</span>
                 <div className="d-flex align-items-center gap-2 flex-wrap ">
-                {article.tag?.map((tag) => (
-                  <Link
-                    key={tag}
-                    className="btn btn btn-outline-primary-700 fs-8 px-3 py-1 fw-bold rounded-3 border-1"
-                    to={`/articles?tag=${tag}`}
-                  >
-                    #{tag}
-                  </Link>
-                ))}</div>
+                  {article.tag?.map((tag) => (
+                    <Link
+                      key={tag}
+                      className="btn btn btn-outline-primary-700 fs-8 px-3 py-1 fw-bold rounded-3 border-1"
+                      to={`/articles?tag=${tag}`}
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
               </div>
               <div className="d-flex align-items-center">
-                 <span className=" text-neutral-900  me-3">分享</span>
+                <span className=" text-neutral-900  me-3">分享</span>
                 <div className="d-flex align-items-center gap-3">
-               
-                <button
-                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
-                  onClick={() => handleShare("fb")}
-                >
-                  <i className="bi bi-facebook"></i>
-                </button>
-                <button
-                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
-                  onClick={() => handleShare("line")}
-                >
-                  <i className="bi bi-line"></i>
-                </button>
-                <button
-                  className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
-                  onClick={() => handleShare("copy")}
-                >
-                  <i className="bi bi-link-45deg"></i>
-                </button>
+                  <button
+                    className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
+                    onClick={() => handleShare("fb")}
+                  >
+                    <i className="bi bi-facebook"></i>
+                  </button>
+                  <button
+                    className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
+                    onClick={() => handleShare("line")}
+                  >
+                    <i className="bi bi-line"></i>
+                  </button>
+                  <button
+                    className="btn rounded-circle share-btn btn-secondary-500 d-flex align-items-center"
+                    onClick={() => handleShare("copy")}
+                  >
+                    <i className="bi bi-link-45deg"></i>
+                  </button>
                 </div>
               </div>
             </div>
@@ -392,10 +402,10 @@ function Article() {
       {/* --- 留言/電子報 --- */}
       <section className=" bg-neutral-200  bottom-section">
         {/* 電子報 */}
-        <div className="container mb-14">
+        <div className="container mb-11 mb-md-14">
           <div className="card mb-3 newsletter-wrapper">
             <div className="row g-0">
-              <div className="col-md-6 rtl-8 rbl-8  py-13 px-8 newsletter-left radius-top-left  d-flex align-items-center">
+              <div className="col-md-6   py-8 py-md-13 px-4  px-md-8 newsletter-left radius-top-left  d-flex align-items-center">
                 <div className="card-body px-5">
                   <h2 className="card-title fw-bold text-white custom-txt-shadow mb-3">
                     不想錯過養護秘訣？
@@ -406,16 +416,16 @@ function Article() {
                 </div>
               </div>
 
-              <div className="col-md-6 right-content py-13 px-8 d-flex align-items-center bg-primary-500 rtr-8 rbr-8">
+              <div className="col-md-6 newsletter-right py-5 py-md-13 px-4  px-md-8 d-flex align-items-center bg-primary-500 ">
                 <div className="card-body">
-                  <div className="d-flex">
+                  <div className="d-flex flex-column flex-md-row">
                     <input
                       type="email"
-                      className="form-control  me-4"
+                      className="form-control  me-md-4 mb-3 mb-md-0"
                       placeholder="請輸入您的電子信箱"
                     />
                     <button
-                      className="btn btn-outline-light-primary700 py-2 px-6 text-nowrap fw-bold"
+                      className="btn btn-outline-light-primary700 py-2 px-6 text-nowrap fw-bold align-self-start mx-auto mx-md-0"
                       type="button"
                     >
                       立即訂閱
@@ -431,7 +441,7 @@ function Article() {
         <div className="container content-wrapper">
           <div className="content-limit">
             <div className="text-center">
-              <h4 className="fw-bold mb-4 ps-3 mb-12 h2">留言與討論</h4>
+              <h4 className="fw-bold mb-6 mb-md-12 h2">留言與討論</h4>
             </div>
             {/* --- 8. 留言輸入表單 (條件渲染) --- */}
             {/*篩選出留言區塊*/}
@@ -441,13 +451,12 @@ function Article() {
                 ?.comments?.map((c, index) => (
                   <div
                     key={index}
-                    className="border-bottom border-secondary-100 d-flex gap-4 py-9 px-12"
+                    className="border-bottom border-secondary-100 d-flex py-5 px-3 py-md-9 px-md-12"
                   >
-                    <div className="avatar-circle rounded-circle">
+                    <div className="avatar-circle rounded-circle me-3 me-md-4">
                       <img
                         src={AVATARS[getFixedIndex(c.userName, AVATARS.length)]}
                         className="avatar-img"
-                     
                       />
                     </div>
                     <div>
@@ -458,27 +467,22 @@ function Article() {
                 ))}
               {isAuth ? (
                 /* ---已登入 --- */
-                <div className="py-9 px-12">
-                  <div className="d-flex align-items-center  mb-6">
-                    <div
-                      className="avatar-circle rounded-circle overflow-hidden"
-                      
-                    >
+                <div className="py-5 px-3 py-md-9 px-md-12">
+                  <div className="d-flex align-items-center mb-4  mb-md-6">
+                    <div className="avatar-circle rounded-circle overflow-hidden me-3 me-md-4">
                       <img
                         src={
                           AVATARS[
                             getFixedIndex(currentUser.userName, AVATARS.length)
                           ]
                         }
-                        className="avatar-img"
+                        className="avatar-img "
                       />
                     </div>
-                    <span className="ms-4 fw-bold h4">
-                      {currentUser.userName}
-                    </span>
+                    <span className=" fw-bold h4">{currentUser.userName}</span>
                   </div>
                   <div className="text-center">
-                    <div className="form-floating mb-6">
+                    <div className="form-floating mb-4 mb-md-6">
                       <textarea
                         className="form-control"
                         placeholder="分享您養護經驗或提出問題…"
@@ -516,7 +520,7 @@ function Article() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
 
