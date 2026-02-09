@@ -418,23 +418,44 @@ function Article() {
 
               <div className="col-md-6 newsletter-right py-5 py-md-13 px-4  px-md-8 d-flex align-items-center bg-primary-500 ">
                 <div className="card-body">
+                  <form 
+      action="https://github.us7.list-manage.com/subscribe/post?u=8b2d1536897d187f2aff27a8e&amp;id=1cbedfdc0d&amp;f_id=007cb7e0f0"
+      method="post" 
+      id="mc-embedded-subscribe-form" 
+      name="mc-embedded-subscribe-form" 
+      target="_blank"
+    >
                   <div className="d-flex flex-column flex-md-row">
                     <input
                       type="email"
+                      name="EMAIL" // Mailchimp才收得到資料
                       className="form-control  me-md-4 mb-3 mb-md-0"
                       placeholder="請輸入您的電子信箱"
+                      required
                     />
                     <button
                       className="btn btn-outline-light-primary700 py-2 px-6 text-nowrap fw-bold align-self-start mx-auto mx-md-0"
-                      type="button"
+                     type="submit"
                     >
                       立即訂閱
                     </button>
                   </div>
+                  {/* 「防止機器人」隱藏欄位 */}
+      <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+        <input 
+          type="text" 
+          name="b_8b2d1536897d187f2aff27a8e_1cbedfdc0d" 
+          tabIndex="-1" 
+          value="" 
+          readOnly
+        />
+      </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
+          
         </div>
 
         {/* 留言 */}
