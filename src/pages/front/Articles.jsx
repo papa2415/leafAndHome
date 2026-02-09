@@ -55,8 +55,9 @@ function Articles() {
     if (tagUrl) {
       setSelectedTag(tagUrl);
     }
+    setCurrentPage(1);
     window.scrollTo(0, 0); // 捲回頂部
-  }, [tagUrl]);
+  }, [tagUrl, selectedTag]);
   const filteredArticles = articles
     .filter((item) => {
       // 如果文章的 tag 陣列包含選中的標籤
@@ -136,6 +137,7 @@ function Articles() {
                   onChange={(e) => {
                     setSearch(e.target.value);
                   }}
+                  onClick={() => setSearch("")}
                 />
               </div>
             </div>
@@ -254,7 +256,10 @@ function Articles() {
               </p>
               <button
                 className="btn btn-primary-700"
-                onClick={() => setSelectedTag("全部")}
+                onClick={() => {
+                  setSearch("");
+                  setSelectedTag("全部");
+                }}
               >
                 回全部文章
               </button>
