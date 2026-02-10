@@ -353,7 +353,14 @@ export default function Cart() {
                     <h5>{couponApplied ? totalAfterCoupon : total}</h5>
                   </div>
                 </div>
-                <button type="button" onClick={() => navigate("checkout")}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate("checkout", {
+                      state: { couponApplied, couponCode, totalAfterCoupon },
+                    })
+                  }
+                >
                   繼續結帳
                 </button>
               </div>

@@ -3,16 +3,26 @@ import { useEffect, useState } from "react";
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Checkout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [cartData, setCartData] = useState([]);
   const subtotal = cartData.reduce((sum, item) => sum + item.total, 0);
   const shipping = cartData.length > 0 ? 120 : 0;
   const total = subtotal + shipping;
-  const [couponCode, setCouponCode] = useState(""); // 使用者輸入
-  const [couponApplied, setCouponApplied] = useState(false); // 是否成功套用
-  const [totalAfterCoupon, setTotalAfterCoupon] = useState(total); // 折扣後金額
-  const navigate = useNavigate();
+
+  const [couponApplied, setCouponApplied] = useState(
+    location.state?.couponApplied || false,
+  );
+  const [couponCode, setCouponCode] = useState(
+    location.state?.couponCode || "",
+  );
+  const [totalAfterCoupon, setTotalAfterCoupon] = useState(
+    location.state?.totalAfterCoupon || total,
+  );
 
   //fetchCartData function
   const fetchCartData = async () => {
@@ -103,9 +113,9 @@ export default function Checkout() {
           <div className="col-9 ">
             <div className="cartSection border mb-4">
               <div className="head d-flex justify-content-between py-5 px-5 bg-secondary bg-opacity-25">
-                <h5>購物車</h5>
-                <button type="button" onClick={() => deleteCarts()}>
-                  全部刪除
+                <h5>訂單內容</h5>
+                <button type="button" onClick={() => navigate("/cart")}>
+                  回購物車頁
                 </button>
               </div>
               <table className="table table-borderless">
@@ -116,7 +126,6 @@ export default function Checkout() {
                     <th scope="col">單價</th>
                     <th scope="col">數量</th>
                     <th scope="col">總價</th>
-                    <th scope="col">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -134,174 +143,99 @@ export default function Checkout() {
                           />
                         </td>
                         <td>${item.product.price}</td>
-                        <td>
-                          <div className="input-group w-auto">
-                            <button
-                              className="btn btn-outline-secondary"
-                              type="button"
-                              id="btn-decrease"
-                              onClick={() => {
-                                if (item.qty > 1) {
-                                  updateCartItemQty(item.id, item.qty - 1);
-                                }
-                              }}
-                            >
-                              －
-                            </button>
-                            <input
-                              type="number"
-                              className="form-control text-center"
-                              value={item.qty}
-                              min="1"
-                              id="qtyInput"
-                              onChange={(e) => {
-                                let val = parseInt(e.target.value);
-                                if (isNaN(val) || val < 1) val = 1;
-                                updateCartItemQty(item.id, val);
-                              }}
-                            />
-                            <button
-                              className="btn btn-outline-secondary"
-                              type="button"
-                              id="btn-increase"
-                              onClick={() =>
-                                updateCartItemQty(item.id, item.qty + 1)
-                              }
-                            >
-                              ＋
-                            </button>
-                          </div>
-                        </td>
+                        <td>{item.qty}</td>
                         <td>${item.total}</td>
-                        <td>
-                          <button
-                            type="button"
-                            onClick={() => deleteCart(item.id)}
-                          >
-                            刪除
-                          </button>
-                          <button type="button">加入收藏</button>
-                        </td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-            <div className="addOnSection border mb-5">
-              <div className="head d-flex justifify-contetn-start align-items-end bg-secondary-500">
-                <h5>加購服務</h5>
-                <span className="fs-7">常一起選購的加購服務</span>
+            <div className="payment border mb-5">
+              <div>
+                <h5>付款與發票</h5>
               </div>
-              <ul>
-                <li className="d-flex justify-content-around align-items-center">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
-                    alt=""
-                  />
-                  <div className="d-flex flex-column">
-                    <h5>到貨換盆</h5>
-                    <h6>專業換盆服務，含優質培養土</h6>
-                  </div>
-                  <input
-                    type="number"
-                    defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
-                  />
-                  <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
-                    加入
-                  </button>
-                </li>
-                <li className="d-flex justify-content-around align-items-center">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
-                    alt=""
-                  />
-                  <div className="d-flex flex-column">
-                    <h5>送禮包裝</h5>
-                    <h6>精美禮盒包裝，附手寫卡片</h6>
-                  </div>
-                  <input
-                    type="number"
-                    defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
-                  />
-                  <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
-                    加入
-                  </button>
-                </li>
-                <li className="d-flex justify-content-around align-items-center">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
-                    alt=""
-                  />
-                  <div className="d-flex flex-column">
-                    <h5>新手照護卡</h5>
-                    <h6>專屬照護指南，隨貨附贈</h6>
-                  </div>
-                  <input
-                    type="number"
-                    defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
-                  />
-                  <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
-                    加入
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div className="watchList border">
-              <div className="head d-flex justify-content-between align-items-cneter bg-secondary-500">
-                <div className="d-flex justify-content-start ">
-                  <h5>收藏清單</h5>
-                  <span className="fs-7">那些您曾停下來看過的植物</span>
+              <div className="row">
+                <div className="col-6 d-flex flex-column">
+                  <h6>付款:</h6>
+                  <label htmlFor="payment">付款方式</label>
+                  <select name="" id="payment">
+                    <option value="貨到付款">貨到付款</option>
+                    <option value="線上刷卡">線上刷卡</option>
+                  </select>
                 </div>
-                <button type="button">查看全部</button>
+                <div className="col-6 d-flex flex-column">
+                  <h6>電子發票:</h6>
+                  <label htmlFor="einvoice">電子發票類型</label>
+                  <select name="" id="einvoice">
+                    <option value="二聯電子發票">二聯電子發票</option>
+                    <option value="三聯電子發票">三聯電子發票</option>
+                  </select>
+                  <label htmlFor="email">email</label>
+                  <input
+                    type="text"
+                    placeholder="example@plantlife.com"
+                    id="email"
+                  />
+                  <div className="carrier d-flex gap-4">
+                    <div className="type d-flex flex-column">
+                      <label htmlFor="carrier">載具類型</label>
+                      <select name="" id="carrier">
+                        <option value="手機條碼載具">手機條碼載具</option>
+                        <option value="會員載具">會員載具</option>
+                      </select>
+                    </div>
+                    <div className="code d-flex flex-column">
+                      <label htmlFor="barcode">載具條碼</label>
+                      <input
+                        type="text"
+                        placeholder="格式:/123-ABC(共8位字元)"
+                        id="barcode"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <ul>
-                <li className="d-flex justify-content-around align-items-center">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
-                    alt=""
-                  />
-                  <div className="d-flex flex-column">
-                    <h5>吊蘭</h5>
-                    <h6>Spider Plant</h6>
+            </div>
+            <div className="payment border mb-5">
+              <div>
+                <h5>寄送資訊</h5>
+              </div>
+              <div className="row">
+                <div className="col-6 d-flex flex-column">
+                  <h6>收件人資訊:</h6>
+                  <label htmlFor="name">全名</label>
+                  <input type="text" id="name" placeholder="請輸入您的姓名" />
+                  <label htmlFor="tel">電話號碼</label>
+                  <input type="text" id="tel" placeholder="手機或市話" />
+                </div>
+                <div className="col-6 d-flex flex-column">
+                  <h6>寄件地址:</h6>
+                  <div className="carrier d-flex gap-4">
+                    <div className="code d-flex flex-column">
+                      <label htmlFor="barcode">城市</label>
+                      <input type="text" value="台北市" id="barcode" />
+                    </div>
+                    <div className="type d-flex flex-column">
+                      <label htmlFor="carrier">區</label>
+                      <select name="" id="carrier">
+                        <option value="內湖區">內湖區</option>
+                        <option value="大安區">大安區</option>
+                        <option value="文山區">文山區</option>
+                      </select>
+                    </div>
                   </div>
-                  <input
-                    type="number"
-                    defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
-                  />
-                  <h4>NT$340</h4>
-                  <button type="button" style={{ height: "36px" }}>
-                    加入
-                  </button>
-                </li>
+                  <label htmlFor="adress">地址</label>
+                  <input type="text" placeholder="街道、巷弄、門號、樓層" />
 
-                <li className="d-flex justify-content-around align-items-center">
-                  <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
-                    alt=""
-                  />
-                  <div className="d-flex flex-column">
-                    <h5>波士頓蕨</h5>
-                    <h6>Boston Fern</h6>
-                  </div>
+                  <label htmlFor="postcode">email</label>
                   <input
-                    type="number"
-                    defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
+                    type="text"
+                    placeholder="example@plantlife.com"
+                    id="email"
                   />
-                  <h4>NT$350</h4>
-                  <button type="button" style={{ height: "36px" }}>
-                    加入
-                  </button>
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
           </div>
           <div className="col-3">
