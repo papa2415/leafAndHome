@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
+import Title from "../../component/Title";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -38,7 +39,13 @@ function Product() {
   if (!product)
     return (
       <>
-        <h2 className="h2">查無產品</h2>
+        <div className="container">
+          <div className="py-11 py-md-14">
+            <div className="text-center mb-6 mb-md-13">
+              <Title title="查無產品" />
+            </div>
+          </div>
+        </div>
       </>
     );
   return (
@@ -110,8 +117,10 @@ function Product() {
       </section>
       <section className="bg-neutral-200  py-11 py-md-14">
         <div className="container">
+          <div className="text-center mb-6 mb-md-13">
+            <Title title="照顧指南" />
+          </div>
           <div className="text-center">
-            <h2 className="h2 mb-md-6 mb-4">照顧指南</h2>
             {product?.careGuide?.difficulty}
             {product?.careGuide?.humidity}
             {product?.careGuide?.light}
@@ -125,8 +134,10 @@ function Product() {
       </section>
       <section className="bg-neutral-100  py-11 py-md-14">
         <div className="container">
+          <div className="text-center mb-6 mb-md-13">
+            <Title title="詳細介紹" />
+          </div>
           <div className="text-center">
-            <h2 className="h2 mb-md-6 mb-4">詳細介紹</h2>
             {product?.detailedIntro?.benefits}
             {product?.detailedIntro?.careNotes}
             {product?.detailedIntro?.benefits}
@@ -135,16 +146,18 @@ function Product() {
       </section>
       <section className="bg-neutral-200  py-11 py-md-14">
         <div className="container">
-          <div className="text-center">
-            <h2 className="h2 mb-md-6 mb-4">適合擺放情境</h2>
+          <div className="text-center mb-6 mb-md-13">
+            <Title title="適合擺放情境" />
           </div>
+          <div className="text-center"></div>
         </div>
       </section>
       <section className="bg-neutral-100  py-11 py-md-14">
         <div className="container">
-          <div className="text-center">
-            <h2 className="h2 mb-md-6 mb-4">顧客評價</h2>
+          <div className="text-center mb-6 mb-md-13">
+            <Title title="顧客評價" />
           </div>
+          <div className="text-center"></div>
         </div>
       </section>
       {/* <div className="col-md-4 mb-3" key={product.id}>
