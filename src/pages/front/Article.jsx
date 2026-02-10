@@ -3,6 +3,8 @@ import axios from "axios";
 import { useOutletContext, useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link } from "react-router-dom";
+import Title from "../../component/Title";
+import LeafIcon  from "../../component/LeafIcon";
 
 function Article() {
   // 💡 如果你是用路由 (Route)，這裡會用 useParams 取得網址上的 id
@@ -57,11 +59,11 @@ function Article() {
     const loadPageData = async () => {
       //設定狀態
       setArticle(null);
-      window.scrollTo(0, 0); // 第一次捲動：立刻跳回頂部
+      window.scrollTo({ top: 0, behavior: "smooth" });// 捲回頂部
 
       //等待資料抓取完成
       await articlesData();
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: "smooth" });// 捲回頂部
     };
     loadPageData(); // 執行它
   }, [articleId]);
@@ -320,9 +322,11 @@ function Article() {
                   return (
                     <div key={index}>
                       {/* 相關商品區 */}
-                      <h4 className="fw-bold mb-6 mb-md-9 text-primary-700 border-start border-4 border-success ps-4">
+                       <div className="d-flex d-flex align-items-center mb-9">
+                       <LeafIcon className="me-2" />
+                      <h4 className="fw-bold text-primary-700">
                         {block.title}
-                      </h4>
+                      </h4></div>
                       <div className="row gy-5">
                         {block.products?.map((product) => {
                           return (
@@ -363,9 +367,11 @@ function Article() {
         <div className="container">
           <div className="content-limit">
             <div className="row">
-              <h4 className="fw-bold mb-9 text-primary-700 border-start border-4 border-success ps-4">
+              <div className="d-flex d-flex align-items-center mb-9">
+               <LeafIcon className="me-2" />
+              <h4 className="fw-bold text-primary-700">
                 更多成為綠手指的小祕訣
-              </h4>
+              </h4></div>
               {relatedArticles.map((item) => (
                 <div key={item.id} className="col-md-4 mb-3 d-flex">
                   <Link
@@ -464,7 +470,8 @@ function Article() {
         <div className="container content-wrapper">
           <div className="content-limit">
             <div className="text-center">
-              <h4 className="fw-bold mb-6 mb-md-12 h2">留言與討論</h4>
+              <div className="fw-bold mb-6 mb-md-12">
+                 <Title title="留言與討論" className="fw-bold"/></div>
             </div>
             {/* --- 8. 留言輸入表單 (條件渲染) --- */}
             {/*篩選出留言區塊*/}

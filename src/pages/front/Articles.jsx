@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+
 const categories = [
   "全部",
   "新手友善",
@@ -55,9 +55,12 @@ function Articles() {
     if (tagUrl) {
       setSelectedTag(tagUrl);
     }
-    setCurrentPage(1);
-    window.scrollTo(0, 0); // 捲回頂部
-  }, [tagUrl, selectedTag]);
+window.scrollTo({ top: 0, behavior: "smooth" });// 捲回頂部
+  }, [tagUrl]);
+  useEffect(() => {
+  setCurrentPage(1);
+  window.scrollTo({ top: 0, behavior: "smooth" });// 捲回頂部
+}, [selectedTag, search])
   const filteredArticles = articles
     .filter((item) => {
       // 如果文章的 tag 陣列包含選中的標籤
