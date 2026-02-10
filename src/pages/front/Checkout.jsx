@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 import { useNavigate } from "react-router-dom";
 
-export default function Cart() {
+export default function Checkout() {
   const [cartData, setCartData] = useState([]);
   const subtotal = cartData.reduce((sum, item) => sum + item.total, 0);
   const shipping = cartData.length > 0 ? 120 : 0;
@@ -353,7 +353,10 @@ export default function Cart() {
                     <h5>{couponApplied ? totalAfterCoupon : total}</h5>
                   </div>
                 </div>
-                <button type="button" onClick={() => navigate("checkout")}>
+                <button
+                  type="button"
+                  onClick={() => navigate("/cart/order-success")}
+                >
                   繼續結帳
                 </button>
               </div>
