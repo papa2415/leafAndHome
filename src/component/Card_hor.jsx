@@ -3,7 +3,7 @@ function Card_hor({ image, id, title, enTitle, star, tag }) {
   return (
     <>
       <NavLink className="w-100 card-hor-link" to="/products">
-        <div class="card card-hor mb-3 p-2 bg-neutral-100">
+        <div className="card card-hor mb-3 p-2 bg-neutral-100">
           <div className="d-flex gap-3 ">
             <div className="align-self-center">
               <p className="circle rounded-pill p-2 bg-secondary-300  d-flex align-items-center justify-content-center text-white">{id}</p>

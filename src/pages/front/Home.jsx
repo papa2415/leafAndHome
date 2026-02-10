@@ -9,6 +9,7 @@ import article from "/article.png";
 import Card_article from "../../component/Card_Article";
 import Pill from "../../component/Pill";
 import Card_list from "../../component/Card_list";
+import Title from "../../component/Title";
 
 function Home() {
   return (
@@ -74,9 +75,11 @@ function Home() {
       <section className="py-11 py-md-14 bg-neutral-100">
         <div className=" container">
           <div className="text-center mb-6 mb-md-13">
-            <h2 className="h2 mb-md-6 mb-4">從你的生活場景開始</h2>
-            <p className="h6 text-neutral-700">不知道該選什麼植物？告訴我們你想綠化的空間， </p>
-            <p className="h6 text-neutral-700">我們為你推薦最適合的植栽方案。</p>
+            <Title title="從你的生活場景開始" />
+            <div className="mt-6">
+              <p className="h6 text-neutral-700">不知道該選什麼植物？告訴我們你想綠化的空間， </p>
+              <p className="h6 text-neutral-700">我們為你推薦最適合的植栽方案。</p>
+            </div>
           </div>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-6">
             <div className="col">
@@ -97,8 +100,10 @@ function Home() {
       <section className="py-11 py-md-14 bg-neutral-200">
         <div className="container">
           <div className="text-center mb-6 mb-md-13">
-            <h2 className="h2 mb-md-6 mb-4">最適合新手的植物清單</h2>
-            <p className="h6  text-neutral-700">我們根據新手最常見的需求，先幫你整理幾組『不容易失敗』的推薦清單</p>
+            <Title title="最適合新手的植物清單" />
+            <div className="mt-6">
+              <p className="h6 text-neutral-700">我們根據新手最常見的需求，先幫你整理幾組『不容易失敗』的推薦清單</p>
+            </div>
           </div>
           <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3">
             <div className="col">
@@ -156,7 +161,9 @@ function Home() {
       </section>
       <section className="py-14 bg-neutral-200">
         <div className="container">
-          <h2 className="h2 text-center mb-12">森活誌精選</h2>
+          <div className="text-center mb-6 mb-md-13">
+            <Title title="森活誌精選" />
+          </div>
           <div className="d-flex gap-9">
             <div className="articlr-left">
               <Card_article article={article} size="" />
