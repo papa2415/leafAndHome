@@ -184,6 +184,10 @@ export default function Checkout() {
                         <option value="手機條碼載具">手機條碼載具</option>
                         <option value="會員載具">會員載具</option>
                       </select>
+                      <div className="d-flex">
+                        <input type="checkbox" id="defaultCarrier" />
+                        <label htmlFor="defaultCarrier">設定為預設載具</label>
+                      </div>
                     </div>
                     <div className="code d-flex flex-column">
                       <label htmlFor="barcode">載具條碼</label>
@@ -213,12 +217,12 @@ export default function Checkout() {
                   <h6>寄件地址:</h6>
                   <div className="carrier d-flex gap-4">
                     <div className="code d-flex flex-column">
-                      <label htmlFor="barcode">城市</label>
-                      <input type="text" value="台北市" id="barcode" />
+                      <label htmlFor="city">城市</label>
+                      <input type="text" value="台北市" id="city" />
                     </div>
                     <div className="type d-flex flex-column">
-                      <label htmlFor="carrier">區</label>
-                      <select name="" id="carrier">
+                      <label htmlFor="section">區</label>
+                      <select name="" id="section">
                         <option value="內湖區">內湖區</option>
                         <option value="大安區">大安區</option>
                         <option value="文山區">文山區</option>
@@ -226,14 +230,36 @@ export default function Checkout() {
                     </div>
                   </div>
                   <label htmlFor="adress">地址</label>
-                  <input type="text" placeholder="街道、巷弄、門號、樓層" />
-
-                  <label htmlFor="postcode">email</label>
                   <input
                     type="text"
-                    placeholder="example@plantlife.com"
-                    id="email"
+                    placeholder="街道、巷弄、門號、樓層"
+                    id="adress"
                   />
+
+                  <label htmlFor="postcode">郵遞區號</label>
+                  <input
+                    type="text"
+                    placeholder="請輸入郵遞區號"
+                    id="postcode"
+                  />
+                  <div className="d-flex">
+                    <input type="checkbox" id="defaultInfo" />
+                    <label htmlFor="defaultInfo">設定為預設結帳資訊</label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div className="row">
+                <div className="col-6">
+                  <div className="mb-3">
+                    <h6>備注:</h6>
+                    <textarea
+                      className="form-control"
+                      id="remark"
+                      rows="3"
+                      placeholder="管理室代收/電聯時間......"
+                    ></textarea>
+                  </div>
                 </div>
               </div>
             </div>
