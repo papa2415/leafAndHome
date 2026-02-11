@@ -4,6 +4,7 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export default function Checkout() {
   const location = useLocation();
@@ -23,6 +24,41 @@ export default function Checkout() {
   const [totalAfterCoupon, setTotalAfterCoupon] = useState(
     location.state?.totalAfterCoupon || total,
   );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  //onSubmit
+  const onSubmit = async (data) => {
+    const orderData = {
+      data: {
+        user: {
+          name: data.name,
+          email: data.email,
+          tel: data.tel,
+          address: data.address,
+        },
+        message: data.remark, // 備註
+      },
+    };
+
+    try {
+      const res = await axios.post(
+        `${API_BASE}/v2/api/${API_PATH}/order`,
+        orderData,
+      );
+
+      console.log("訂單建立成功", res.data);
+
+      navigate("/cart/order-success");
+    } catch (error) {
+      console.error(error);
+      alert("建立訂單失敗");
+    }
+  };
 
   //fetchCartData function
   const fetchCartData = async () => {
@@ -151,118 +187,152 @@ export default function Checkout() {
                 </tbody>
               </table>
             </div>
-            <div className="payment border mb-5">
-              <div>
-                <h5>付款與發票</h5>
-              </div>
-              <div className="row">
-                <div className="col-6 d-flex flex-column">
-                  <h6>付款:</h6>
-                  <label htmlFor="payment">付款方式</label>
-                  <select name="" id="payment">
-                    <option value="貨到付款">貨到付款</option>
-                    <option value="線上刷卡">線上刷卡</option>
-                  </select>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="payment border mb-5">
+                <div>
+                  <h5>付款與發票</h5>
                 </div>
-                <div className="col-6 d-flex flex-column">
-                  <h6>電子發票:</h6>
-                  <label htmlFor="einvoice">電子發票類型</label>
-                  <select name="" id="einvoice">
-                    <option value="二聯電子發票">二聯電子發票</option>
-                    <option value="三聯電子發票">三聯電子發票</option>
-                  </select>
-                  <label htmlFor="email">email</label>
-                  <input
-                    type="text"
-                    placeholder="example@plantlife.com"
-                    id="email"
-                  />
-                  <div className="carrier d-flex gap-4">
-                    <div className="type d-flex flex-column">
-                      <label htmlFor="carrier">載具類型</label>
-                      <select name="" id="carrier">
-                        <option value="手機條碼載具">手機條碼載具</option>
-                        <option value="會員載具">會員載具</option>
-                      </select>
-                      <div className="d-flex">
-                        <input type="checkbox" id="defaultCarrier" />
-                        <label htmlFor="defaultCarrier">設定為預設載具</label>
+                <div className="row">
+                  <div className="col-6 d-flex flex-column">
+                    <h6>付款:</h6>
+                    <label htmlFor="payment">付款方式</label>
+                    <select name="" id="payment">
+                      <option value="貨到付款">貨到付款</option>
+                      <option value="線上刷卡">線上刷卡</option>
+                    </select>
+                  </div>
+                  <div className="col-6 d-flex flex-column">
+                    <h6>電子發票:</h6>
+                    <label htmlFor="einvoice">電子發票類型</label>
+                    <select name="" id="einvoice">
+                      <option value="二聯電子發票">二聯電子發票</option>
+                      <option value="三聯電子發票">三聯電子發票</option>
+                    </select>
+                    <label htmlFor="email">email</label>
+                    <input
+                      type="text"
+                      placeholder="example@plantlife.com"
+                      id="email"
+                      {...register("email", {
+                        required: "請輸入 Email",
+                      })}
+                    />
+                    {errors.email && (
+                      <small className="text-danger">
+                        {errors.email.message}
+                      </small>
+                    )}
+                    <div className="carrier d-flex gap-4">
+                      <div className="type d-flex flex-column">
+                        <label htmlFor="carrier">載具類型</label>
+                        <select name="" id="carrier">
+                          <option value="手機條碼載具">手機條碼載具</option>
+                          <option value="會員載具">會員載具</option>
+                        </select>
+                        <div className="d-flex">
+                          <input type="checkbox" id="defaultCarrier" />
+                          <label htmlFor="defaultCarrier">設定為預設載具</label>
+                        </div>
+                      </div>
+                      <div className="code d-flex flex-column">
+                        <label htmlFor="barcode">載具條碼</label>
+                        <input
+                          type="text"
+                          placeholder="格式:/123-ABC(共8位字元)"
+                          id="barcode"
+                        />
                       </div>
                     </div>
-                    <div className="code d-flex flex-column">
-                      <label htmlFor="barcode">載具條碼</label>
-                      <input
-                        type="text"
-                        placeholder="格式:/123-ABC(共8位字元)"
-                        id="barcode"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="payment border mb-5">
-              <div>
-                <h5>寄送資訊</h5>
-              </div>
-              <div className="row">
-                <div className="col-6 d-flex flex-column">
-                  <h6>收件人資訊:</h6>
-                  <label htmlFor="name">全名</label>
-                  <input type="text" id="name" placeholder="請輸入您的姓名" />
-                  <label htmlFor="tel">電話號碼</label>
-                  <input type="text" id="tel" placeholder="手機或市話" />
+              <div className="shipping border mb-5">
+                <div>
+                  <h5>寄送資訊</h5>
                 </div>
-                <div className="col-6 d-flex flex-column">
-                  <h6>寄件地址:</h6>
-                  <div className="carrier d-flex gap-4">
-                    <div className="code d-flex flex-column">
-                      <label htmlFor="city">城市</label>
-                      <input type="text" value="台北市" id="city" />
-                    </div>
-                    <div className="type d-flex flex-column">
-                      <label htmlFor="section">區</label>
-                      <select name="" id="section">
-                        <option value="內湖區">內湖區</option>
-                        <option value="大安區">大安區</option>
-                        <option value="文山區">文山區</option>
-                      </select>
-                    </div>
+                <div className="row">
+                  <div className="col-6 d-flex flex-column">
+                    <h6>收件人資訊:</h6>
+                    <label htmlFor="name">全名</label>
+                    <input
+                      type="text"
+                      id="name"
+                      placeholder="請輸入您的姓名"
+                      {...register("name", { required: "請輸入姓名" })}
+                    />
+                    {errors.name && (
+                      <small className="text-danger">
+                        {errors.name.message}
+                      </small>
+                    )}
+                    <label htmlFor="tel">電話號碼</label>
+                    <input
+                      type="text"
+                      id="tel"
+                      placeholder="手機或市話"
+                      {...register("tel", {
+                        required: "請輸入電話",
+                        pattern: { value: /^[0-9\-+() ]+$/ },
+                        message: "電話格式錯誤",
+                      })}
+                    />
+                    {errors.tel && (
+                      <small className="text-danger">
+                        {errors.tel.message}
+                      </small>
+                    )}
                   </div>
-                  <label htmlFor="adress">地址</label>
-                  <input
-                    type="text"
-                    placeholder="街道、巷弄、門號、樓層"
-                    id="adress"
-                  />
+                  <div className="col-6 d-flex flex-column">
+                    <h6>寄件地址:</h6>
+                    <div className="carrier d-flex gap-4">
+                      <div className="code d-flex flex-column">
+                        <label htmlFor="city">城市</label>
+                        <input type="text" value="台北市" id="city" />
+                      </div>
+                      <div className="type d-flex flex-column">
+                        <label htmlFor="section">區</label>
+                        <select name="" id="section">
+                          <option value="內湖區">內湖區</option>
+                          <option value="大安區">大安區</option>
+                          <option value="文山區">文山區</option>
+                        </select>
+                      </div>
+                    </div>
+                    <label htmlFor="adress">地址</label>
+                    <input
+                      type="text"
+                      placeholder="街道、巷弄、門號、樓層"
+                      id="adress"
+                    />
 
-                  <label htmlFor="postcode">郵遞區號</label>
-                  <input
-                    type="text"
-                    placeholder="請輸入郵遞區號"
-                    id="postcode"
-                  />
-                  <div className="d-flex">
-                    <input type="checkbox" id="defaultInfo" />
-                    <label htmlFor="defaultInfo">設定為預設結帳資訊</label>
+                    <label htmlFor="postcode">郵遞區號</label>
+                    <input
+                      type="text"
+                      placeholder="請輸入郵遞區號"
+                      id="postcode"
+                    />
+                    <div className="d-flex">
+                      <input type="checkbox" id="defaultInfo" />
+                      <label htmlFor="defaultInfo">設定為預設結帳資訊</label>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-6">
+                    <div className="mb-3">
+                      <h6>備注:</h6>
+                      <textarea
+                        className="form-control"
+                        id="remark"
+                        rows="3"
+                        placeholder="管理室代收/電聯時間......"
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
               </div>
-              <hr />
-              <div className="row">
-                <div className="col-6">
-                  <div className="mb-3">
-                    <h6>備注:</h6>
-                    <textarea
-                      className="form-control"
-                      id="remark"
-                      rows="3"
-                      placeholder="管理室代收/電聯時間......"
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
           <div className="col-3">
             <div
