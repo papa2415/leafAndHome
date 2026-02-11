@@ -33,26 +33,26 @@ export default function Checkout() {
 
   //onSubmit
   const onSubmit = async (data) => {
+    const fullAddress =
+      data.postcode + data.city + data.section + data.detailAddress;
     const orderData = {
       data: {
         user: {
           name: data.name,
           email: data.email,
           tel: data.tel,
-          address: data.address,
+          address: fullAddress,
         },
-        message: data.remark, // 備註
+        message: data.remark,
       },
     };
 
     try {
       const res = await axios.post(
-        `${API_BASE}/v2/api/${API_PATH}/order`,
+        `${API_BASE}/api/${API_PATH}/order`,
         orderData,
       );
-
       console.log("訂單建立成功", res.data);
-
       navigate("/cart/order-success");
     } catch (error) {
       console.error(error);
@@ -158,7 +158,6 @@ export default function Checkout() {
                 <thead>
                   <tr>
                     <th>商品主圖</th>
-
                     <th scope="col">單價</th>
                     <th scope="col">數量</th>
                     <th scope="col">總價</th>
@@ -168,15 +167,21 @@ export default function Checkout() {
                   {cartData.map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>
-                          <img
-                            src={item.product.imageUrl}
-                            style={{
-                              height: "100px",
-                              width: "100px",
-                              objectFit: "cover",
-                            }}
-                          />
+                        <td style={{ width: "400px" }}>
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={item.product.imageUrl}
+                              style={{
+                                height: "100px",
+                                width: "100px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <div className="d-flex flex-column">
+                              <h6>{item.product.titleZh}</h6>
+                              <h6>{item.product.titleEn}</h6>
+                            </div>
+                          </div>
                         </td>
                         <td>${item.product.price}</td>
                         <td>{item.qty}</td>
@@ -225,7 +230,10 @@ export default function Checkout() {
                     <div className="carrier d-flex gap-4">
                       <div className="type d-flex flex-column">
                         <label htmlFor="carrier">載具類型</label>
-                        <select name="" id="carrier">
+                        <select name="" id="carrier" defaultValue={""}>
+                          <option value="" disabled>
+                            請選擇
+                          </option>
                           <option value="手機條碼載具">手機條碼載具</option>
                           <option value="會員載具">會員載具</option>
                         </select>
@@ -272,8 +280,10 @@ export default function Checkout() {
                       placeholder="手機或市話"
                       {...register("tel", {
                         required: "請輸入電話",
-                        pattern: { value: /^[0-9\-+() ]+$/ },
-                        message: "電話格式錯誤",
+                        pattern: {
+                          value: /^[0-9\-+() ]+$/,
+                          message: "電話格式錯誤",
+                        },
                       })}
                     />
                     {errors.tel && (
@@ -287,30 +297,52 @@ export default function Checkout() {
                     <div className="carrier d-flex gap-4">
                       <div className="code d-flex flex-column">
                         <label htmlFor="city">城市</label>
-                        <input type="text" value="台北市" id="city" />
+                        <input
+                          type="text"
+                          value="台北市"
+                          id="city"
+                          readOnly
+                          {...register("city")}
+                        />
                       </div>
                       <div className="type d-flex flex-column">
                         <label htmlFor="section">區</label>
-                        <select name="" id="section">
+                        <select name="" id="section" {...register("section")}>
                           <option value="內湖區">內湖區</option>
                           <option value="大安區">大安區</option>
                           <option value="文山區">文山區</option>
                         </select>
                       </div>
                     </div>
-                    <label htmlFor="adress">地址</label>
+                    <label htmlFor="address">地址</label>
                     <input
                       type="text"
                       placeholder="街道、巷弄、門號、樓層"
-                      id="adress"
+                      id="address"
+                      {...register("detailAddress", {
+                        required: "請輸入地址",
+                      })}
                     />
+                    {errors.detailAddress && (
+                      <small className="text-danger">
+                        {errors.detailAddress.message}
+                      </small>
+                    )}
 
                     <label htmlFor="postcode">郵遞區號</label>
                     <input
                       type="text"
                       placeholder="請輸入郵遞區號"
                       id="postcode"
+                      {...register("postcode", {
+                        required: "請輸入郵遞區號",
+                      })}
                     />
+                    {errors.postcode && (
+                      <small className="text-danger">
+                        {errors.postcode.message}
+                      </small>
+                    )}
                     <div className="d-flex">
                       <input type="checkbox" id="defaultInfo" />
                       <label htmlFor="defaultInfo">設定為預設結帳資訊</label>
@@ -327,6 +359,7 @@ export default function Checkout() {
                         id="remark"
                         rows="3"
                         placeholder="管理室代收/電聯時間......"
+                        {...register("remark")}
                       ></textarea>
                     </div>
                   </div>
@@ -383,11 +416,8 @@ export default function Checkout() {
                     <h5>{couponApplied ? totalAfterCoupon : total}</h5>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => navigate("/cart/order-success")}
-                >
-                  繼續結帳
+                <button type="submit" onClick={handleSubmit(onSubmit)}>
+                  送出訂單
                 </button>
               </div>
               <p className="card-text">安心結帳</p>

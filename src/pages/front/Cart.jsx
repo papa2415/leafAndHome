@@ -111,8 +111,7 @@ export default function Cart() {
               <table className="table table-borderless">
                 <thead>
                   <tr>
-                    <th>商品主圖</th>
-
+                    <th>商品</th>
                     <th scope="col">單價</th>
                     <th scope="col">數量</th>
                     <th scope="col">總價</th>
@@ -123,15 +122,21 @@ export default function Cart() {
                   {cartData.map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>
-                          <img
-                            src={item.product.imageUrl}
-                            style={{
-                              height: "100px",
-                              width: "100px",
-                              objectFit: "cover",
-                            }}
-                          />
+                        <td style={{ width: "400px" }}>
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={item.product.imageUrl}
+                              style={{
+                                height: "100px",
+                                width: "100px",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <div className="d-flex flex-column">
+                              <h6>{item.product.titleZh}</h6>
+                              <h6>{item.product.titleEn}</h6>
+                            </div>
+                          </div>
                         </td>
                         <td>${item.product.price}</td>
                         <td>
