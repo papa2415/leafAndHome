@@ -48,7 +48,7 @@ const routes = [
         children: [
           { path: "", element: <Cart /> },
           { path: "checkout", element: <Checkout /> },
-          { path: "order-success", element: <OrderSuccess /> },
+          { path: "order-success/:id", element: <OrderSuccess /> },
         ],
       },
     ],

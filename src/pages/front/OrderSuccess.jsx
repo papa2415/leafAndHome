@@ -1,3 +1,10 @@
+import { useParams } from "react-router";
+
 export default function OrderSuccess() {
-  return <h1>結帳完成頁</h1>;
+  const { id } = useParams();
+  return (
+    <div>
+      <h1>訂單編號:{id}</h1>;
+    </div>
+  );
 }

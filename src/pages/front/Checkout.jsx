@@ -53,7 +53,8 @@ export default function Checkout() {
         orderData,
       );
       console.log("訂單建立成功", res.data);
-      navigate("/cart/order-success");
+      const orderId = res.data.orderId;
+      navigate(`/cart/order-success/${orderId}`);
     } catch (error) {
       console.error(error);
       alert("建立訂單失敗");
