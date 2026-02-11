@@ -104,7 +104,11 @@ export default function Cart() {
             <div className="cartSection border mb-4">
               <div className="head d-flex justify-content-between py-5 px-5 bg-secondary bg-opacity-25">
                 <h5>購物車</h5>
-                <button type="button" onClick={() => deleteCarts()}>
+                <button
+                  type="button"
+                  onClick={() => deleteCarts()}
+                  className="btn btn-link text-primary-700 fw-bold text-decoration-underline"
+                >
                   全部刪除
                 </button>
               </div>
@@ -181,11 +185,17 @@ export default function Cart() {
                         <td>
                           <button
                             type="button"
+                            className="btn btn-link text-primary-700 text-decoration-underline fw-bold"
+                          >
+                            加入收藏
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => deleteCart(item.id)}
+                            className="btn btn-link text-primary-500 text-decoration-underline fw-bold"
                           >
                             刪除
                           </button>
-                          <button type="button">加入收藏</button>
                         </td>
                       </tr>
                     );
@@ -203,6 +213,7 @@ export default function Cart() {
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
                     alt=""
+                    style={{ width: "100px", height: "100px" }}
                   />
                   <div className="d-flex flex-column">
                     <h5>到貨換盆</h5>
@@ -211,10 +222,13 @@ export default function Cart() {
                   <input
                     type="number"
                     defaultValue={1}
-                    style={{ width: "60px", height: "36px" }}
+                    style={{ width: "60px", height: "42px" }}
                   />
                   <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-neutral-100 fs-6 fw-bold px-6 py-2"
+                  >
                     加入
                   </button>
                 </li>
@@ -222,6 +236,7 @@ export default function Cart() {
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
                     alt=""
+                    style={{ width: "100px", height: "100px" }}
                   />
                   <div className="d-flex flex-column">
                     <h5>送禮包裝</h5>
@@ -233,7 +248,10 @@ export default function Cart() {
                     style={{ width: "60px", height: "36px" }}
                   />
                   <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-neutral-100 fs-6 fw-bold px-6 py-2"
+                  >
                     加入
                   </button>
                 </li>
@@ -241,6 +259,7 @@ export default function Cart() {
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
                     alt=""
+                    style={{ width: "100px", height: "100px" }}
                   />
                   <div className="d-flex flex-column">
                     <h5>新手照護卡</h5>
@@ -252,7 +271,10 @@ export default function Cart() {
                     style={{ width: "60px", height: "36px" }}
                   />
                   <h4>NT$150</h4>
-                  <button type="button" style={{ height: "36px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-neutral-100 fs-6 fw-bold px-6 py-2"
+                  >
                     加入
                   </button>
                 </li>
@@ -271,6 +293,7 @@ export default function Cart() {
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
                     alt=""
+                    style={{ width: "100px", height: "100px" }}
                   />
                   <div className="d-flex flex-column">
                     <h5>吊蘭</h5>
@@ -282,7 +305,10 @@ export default function Cart() {
                     style={{ width: "60px", height: "36px" }}
                   />
                   <h4>NT$340</h4>
-                  <button type="button" style={{ height: "36px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-neutral-100 fs-6 fw-bold px-6 py-2"
+                  >
                     加入
                   </button>
                 </li>
@@ -291,6 +317,7 @@ export default function Cart() {
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
                     alt=""
+                    style={{ width: "100px", height: "100px" }}
                   />
                   <div className="d-flex flex-column">
                     <h5>波士頓蕨</h5>
@@ -302,7 +329,10 @@ export default function Cart() {
                     style={{ width: "60px", height: "36px" }}
                   />
                   <h4>NT$350</h4>
-                  <button type="button" style={{ height: "36px" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary-500 text-neutral-100 fs-6 fw-bold px-6 py-2"
+                  >
                     加入
                   </button>
                 </li>
