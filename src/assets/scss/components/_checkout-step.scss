@@ -1,0 +1,28 @@
+/* components/_checkout-step.scss */
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step-circle.active {
+  background: #000;
+}
+
+.step-circle.completed {
+  background: #28a745;
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: #e0e0e0;
+}
