@@ -23,7 +23,7 @@ export default function CartHeader({ pathname }) {
 
   return (
     <header className="bg-white" style={{ marginBottom: "80px" }}>
-      <div className="container ">
+      <div className="container d-flex justify-content-between ">
         <div className="d-flex justify-content-start align-items-end py-4">
           <div className="d-flex justify-content-start gap-4">
             <NavLink to="/" className="h3 d-flex align-items-center">
