@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 export default function Cart() {
   const [cartData, setCartData] = useState([]);
@@ -522,7 +522,7 @@ export default function Cart() {
               className="card position-sticky shadow section"
               style={{ top: "16px" }}
             >
-              <div className="card-head bg-primary-500 px-6 py-4">
+              <div className="card-head bg-primary-700 px-6 py-4">
                 <h4 className="card-title text-start text-neutral-100">
                   訂單內容
                 </h4>

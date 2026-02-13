@@ -2,8 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 
 export default function Checkout() {
@@ -213,17 +213,19 @@ export default function Checkout() {
                     <h4 style={{ color: "#74613e" }}>付款與發票</h4>
                   </div>
                   <div className="row">
-                    <div className="col-lg-6 d-flex flex-column">
+                    <div className="col-lg-6 d-flex flex-column mb-5">
                       <div className="mb-2">
                         <h5 style={{ color: "#3e5e4d" }}>付款:</h5>
                       </div>
-                      <label style={{ color: "#666666" }} htmlFor="payment">
-                        付款方式
-                      </label>
-                      <select name="" id="payment">
-                        <option value="貨到付款">貨到付款</option>
-                        <option value="線上刷卡">線上刷卡</option>
-                      </select>
+                      <div className="d-flex flex-column">
+                        <label style={{ color: "#666666" }} htmlFor="payment">
+                          付款方式
+                        </label>
+                        <select name="" id="payment">
+                          <option value="貨到付款">貨到付款</option>
+                          <option value="線上刷卡">線上刷卡</option>
+                        </select>
+                      </div>
                     </div>
                     <div className="col-lg-6 d-flex flex-column">
                       <div className="mb-2">
@@ -265,7 +267,12 @@ export default function Checkout() {
                             >
                               載具類型
                             </label>
-                            <select name="" id="carrier" defaultValue={""}>
+                            <select
+                              name=""
+                              id="carrier"
+                              defaultValue={""}
+                              className="h-100"
+                            >
                               <option value="" disabled>
                                 請選擇
                               </option>
@@ -292,7 +299,7 @@ export default function Checkout() {
                         <input type="checkbox" id="defaultCarrier" />
                         <label
                           htmlFor="defaultCarrier"
-                          style={{ color: "#666666" }}
+                          style={{ color: "#222222" }}
                         >
                           設定為預設載具
                         </label>
@@ -305,44 +312,58 @@ export default function Checkout() {
                     <h4 style={{ color: "#74613e" }}>寄送資訊</h4>
                   </div>
                   <div className="row">
-                    <div className="col-lg-6 d-flex flex-column">
-                      <h6>收件人資訊:</h6>
-                      <label htmlFor="name">全名</label>
-                      <input
-                        type="text"
-                        id="name"
-                        placeholder="請輸入您的姓名"
-                        {...register("name", { required: "請輸入姓名" })}
-                      />
-                      {errors.name && (
-                        <small className="text-danger">
-                          {errors.name.message}
-                        </small>
-                      )}
-                      <label htmlFor="tel">電話號碼</label>
-                      <input
-                        type="text"
-                        id="tel"
-                        placeholder="手機或市話"
-                        {...register("tel", {
-                          required: "請輸入電話",
-                          pattern: {
-                            value: /^[0-9\-+() ]+$/,
-                            message: "電話格式錯誤",
-                          },
-                        })}
-                      />
-                      {errors.tel && (
-                        <small className="text-danger">
-                          {errors.tel.message}
-                        </small>
-                      )}
+                    <div className="col-lg-6 d-flex flex-column mb-5">
+                      <div className="mb-2 ">
+                        <h6>收件人資訊:</h6>
+                      </div>
+                      <div className="d-flex flex-column mb-2">
+                        <label htmlFor="name" style={{ color: "#666666" }}>
+                          全名
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          placeholder="請輸入您的姓名"
+                          {...register("name", { required: "請輸入姓名" })}
+                        />
+                        {errors.name && (
+                          <small className="text-danger">
+                            {errors.name.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="d-flex flex-column">
+                        <label htmlFor="tel" style={{ color: "#666666" }}>
+                          電話號碼
+                        </label>
+                        <input
+                          type="text"
+                          id="tel"
+                          placeholder="手機或市話"
+                          {...register("tel", {
+                            required: "請輸入電話",
+                            pattern: {
+                              value: /^[0-9\-+() ]+$/,
+                              message: "電話格式錯誤",
+                            },
+                          })}
+                        />
+                        {errors.tel && (
+                          <small className="text-danger">
+                            {errors.tel.message}
+                          </small>
+                        )}
+                      </div>
                     </div>
                     <div className="col-lg-6 d-flex flex-column">
-                      <h6>寄件地址:</h6>
-                      <div className="carrier d-flex gap-4">
+                      <div className="mb-2">
+                        <h6>寄件地址:</h6>
+                      </div>
+                      <div className="d-flex gap-4 mb-2">
                         <div className="code d-flex flex-column">
-                          <label htmlFor="city">城市</label>
+                          <label htmlFor="city" style={{ color: "#666666" }}>
+                            城市
+                          </label>
                           <input
                             type="text"
                             value="台北市"
@@ -352,54 +373,75 @@ export default function Checkout() {
                           />
                         </div>
                         <div className="type d-flex flex-column">
-                          <label htmlFor="section">區</label>
-                          <select name="" id="section" {...register("section")}>
+                          <label htmlFor="section" style={{ color: "#666666" }}>
+                            區
+                          </label>
+                          <select
+                            name=""
+                            id="section"
+                            {...register("section")}
+                            className="h-100"
+                          >
                             <option value="內湖區">內湖區</option>
                             <option value="大安區">大安區</option>
                             <option value="文山區">文山區</option>
                           </select>
                         </div>
                       </div>
-                      <label htmlFor="address">地址</label>
-                      <input
-                        type="text"
-                        placeholder="街道、巷弄、門號、樓層"
-                        id="address"
-                        {...register("detailAddress", {
-                          required: "請輸入地址",
-                        })}
-                      />
-                      {errors.detailAddress && (
-                        <small className="text-danger">
-                          {errors.detailAddress.message}
-                        </small>
-                      )}
-
-                      <label htmlFor="postcode">郵遞區號</label>
-                      <input
-                        type="text"
-                        placeholder="請輸入郵遞區號"
-                        id="postcode"
-                        {...register("postcode", {
-                          required: "請輸入郵遞區號",
-                        })}
-                      />
-                      {errors.postcode && (
-                        <small className="text-danger">
-                          {errors.postcode.message}
-                        </small>
-                      )}
-                      <div className="d-flex">
+                      <div className="d-flex flex-column mb-2">
+                        <label htmlFor="address" style={{ color: "#666666" }}>
+                          地址
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="街道、巷弄、門號、樓層"
+                          id="address"
+                          {...register("detailAddress", {
+                            required: "請輸入地址",
+                          })}
+                        />
+                        {errors.detailAddress && (
+                          <small className="text-danger">
+                            {errors.detailAddress.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="d-flex flex-column mb-2">
+                        <label htmlFor="postcode" style={{ color: "#666666" }}>
+                          郵遞區號
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="請輸入郵遞區號"
+                          id="postcode"
+                          {...register("postcode", {
+                            required: "請輸入郵遞區號",
+                          })}
+                        />
+                        {errors.postcode && (
+                          <small className="text-danger">
+                            {errors.postcode.message}
+                          </small>
+                        )}
+                      </div>
+                      <div className="d-flex gap-1">
                         <input type="checkbox" id="defaultInfo" />
-                        <label htmlFor="defaultInfo">設定為預設結帳資訊</label>
+                        <label
+                          htmlFor="defaultInfo"
+                          style={{ color: "#222222" }}
+                        >
+                          設定為預設結帳資訊
+                        </label>
                       </div>
                     </div>
                   </div>
                   <hr />
                   <div className="row">
-                    <div className="col-6">
-                      <div className="mb-3">
-                        <h6>備注:</h6>
+                    <div className="col-lg-6">
+                      <div className="d-flex flex-column">
+                        <div className="mb-2">
+                          <h6>備注:</h6>
+                        </div>
                         <textarea
                           className="form-control"
                           id="remark"
