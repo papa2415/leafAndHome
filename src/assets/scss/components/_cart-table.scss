@@ -35,28 +35,28 @@
   padding-bottom: 1rem;
   border: none;
 }
-.section {
+.cart-table .section {
   border-radius: 16px; // 整個區塊圓角
   overflow: hidden; // 防止內部背景或 table 超出圓角
 }
-.h6 {
+.cart-table .h6 {
   color: $neutral-900;
 }
-.titleEn {
+.cart-table .titleEn {
   color: $secondary-700;
   font-size: 12px;
 }
-.titleZh {
+.cart-table .titleZh {
   color: $neutral-900;
   font-size: 18px;
   font-weight: bold;
 }
-td.price {
+.cart-table td.price {
   color: $neutral-700;
   font-size: 16px;
   font-weight: bold;
 }
-td.total {
+.cart-table td.total {
   color: $neutral-900;
   font-size: 20px;
   font-weight: bold;
@@ -67,12 +67,19 @@ td.total {
   width: 160px;
 }
 .cart-table td.function {
-  width: 80px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; // 垂直置中
-  align-items: flex-end; // 靠右
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center; // 垂直置中
+  //   align-items: flex-end; // 靠右
+  //   height: 100%;
+  display: table-cell; // 確保是 table-cell
+  vertical-align: middle; // 讓按鈕垂直置中
+  text-align: center; // 水平置中，如果要靠右用 right
+}
+.cart-table td.function .btn {
+  white-space: nowrap; // 不換行
+  display: inline-block; // 確保按鈕是 inline-block
+  //   text-align: center;
 }
 
 .cart-table td.quantity .form-control {
@@ -80,7 +87,7 @@ td.total {
   box-sizing: border-box; // 避免 padding 讓寬度超過 td
 }
 
-.btn-custom-link-dark {
+.cart-table .btn-custom-link-dark {
   // 原本 btn btn-link 的樣式
   background: transparent;
   border: none;
@@ -91,7 +98,7 @@ td.total {
   font-weight: bold; // fw-bold
 }
 
-.btn-custom-link-light {
+.cart-table .btn-custom-link-light {
   // 原本 btn btn-link 的樣式
   background: transparent;
   border: none;
@@ -101,15 +108,16 @@ td.total {
   text-decoration: underline;
   font-weight: bold; // fw-bold
 }
-.qty-input-group {
+.cart-table .qty-input-group {
   display: flex;
   width: 150px;
   border-radius: 8px; // 你原本 input-group 有 rounded
   border: 1px solid #ccc; // 整組邊框
 
-  .btn {
+  .cart-table td .function .btn {
     border: none; // 如果不想要按鈕邊框也可以加
-    width: 40px; // 固定寬度按鈕
+    width: 120px; // 固定寬度按鈕
+    white-space: nowrap;
   }
 
   input.form-control {
@@ -132,7 +140,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-.subHeading {
+.cart-table .subHeading {
   font-size: 18px;
   color: $neutral-700;
 }

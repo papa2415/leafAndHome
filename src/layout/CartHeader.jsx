@@ -36,8 +36,8 @@ export default function CartHeader({ pathname }) {
   };
 
   return (
-    <header className="bg-white" style={{ marginBottom: "80px" }}>
-      <div className="container d-flex justify-content-between ">
+    <header className="bg-white py-4 cart-header">
+      <div className="container d-flex flex-column flex-lg-row justify-content-between  ">
         <div className="d-flex justify-content-start align-items-end py-4">
           <div className="d-flex justify-content-start gap-4">
             <NavLink to="/" className="h3 d-flex align-items-center">
@@ -53,7 +53,7 @@ export default function CartHeader({ pathname }) {
           </div>
         </div>
 
-        <div className="d-flex align-items-center gap-3">
+        <div className="d-flex flex-wrap align-items-center gap-3">
           {steps.map((step, index) => (
             <div key={step.path} className="d-flex align-items-center gap-2">
               {/* 圓圈 */}

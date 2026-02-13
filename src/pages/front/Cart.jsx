@@ -98,7 +98,7 @@ export default function Cart() {
 
   return (
     <>
-      <div className="container mb-5 ">
+      <div className="container mb-5 cart-table">
         <div className="row d-flex justify-content-between">
           <div className="col-12 col-lg-9 ">
             <div className="section mb-4">
@@ -113,7 +113,7 @@ export default function Cart() {
                 </button>
               </div>
               <div className="p-4 bg-white">
-                <table className="table cart-table table-hover">
+                <table className="table cart-table table-hover d-none d-lg-table">
                   <thead>
                     <tr>
                       <th>商品</th>
@@ -211,6 +211,94 @@ export default function Cart() {
                     })}
                   </tbody>
                 </table>
+                {/*mobile DOM*/}
+                <div className="d-block d-lg-none">
+                  {cartData.map((item) => {
+                    return (
+                      <div key={item.id} className="cart-card mb-3 p-3 rounded">
+                        {/* 操作列 */}
+                        <div className="d-flex gap-3 justify-content-end">
+                          <button className="btn btn-custom-link-dark">
+                            加入收藏
+                          </button>
+                          <button
+                            onClick={() => deleteCart(item.id)}
+                            className="btn btn-custom-link-light"
+                          >
+                            刪除
+                          </button>
+                        </div>
+
+                        {/* 商品資訊 */}
+                        <div className="d-flex gap-3 mb-3">
+                          <img
+                            src={item.product.imageUrl}
+                            style={{
+                              width: "80px",
+                              height: "80px",
+                              objectFit: "cover",
+                            }}
+                          />
+
+                          <div>
+                            <div className="titleZh">
+                              {item.product.titleZh}
+                            </div>
+                            <div className="titleEn">
+                              {item.product.titleEn}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 單價 */}
+                        <div className="d-flex justify-content-end mb-2">
+                          <span>NT $ {item.product.price}</span>
+                        </div>
+
+                        {/* 數量 */}
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                          <div className="qty-input-group">
+                            <button
+                              className="btn"
+                              onClick={() => {
+                                if (item.qty > 1) {
+                                  updateCartItemQty(item.id, item.qty - 1);
+                                }
+                              }}
+                            >
+                              －
+                            </button>
+
+                            <input
+                              type="number"
+                              className="form-control text-center"
+                              value={item.qty}
+                              min="1"
+                              onChange={(e) => {
+                                let val = parseInt(e.target.value);
+                                if (isNaN(val) || val < 1) val = 1;
+                                updateCartItemQty(item.id, val);
+                              }}
+                            />
+
+                            <button
+                              className="btn"
+                              onClick={() =>
+                                updateCartItemQty(item.id, item.qty + 1)
+                              }
+                            >
+                              ＋
+                            </button>
+                          </div>
+                          {/* 總價 */}
+                          <div className="d-flex justify-content-between fw-bold">
+                            <span>NT $ {item.total}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
             <div className="section mb-4">
@@ -219,7 +307,7 @@ export default function Cart() {
                 <span className="subHeading">常一起選購的加購服務</span>
               </div>
               <div className="p-4 bg-white">
-                <table className="table cart-table table-hover">
+                <table className="table cart-table table-hover d-none d-lg-table">
                   <tbody>
                     <tr>
                       <td style={{ width: "400px" }}>
@@ -253,7 +341,7 @@ export default function Cart() {
                           <input
                             type="number"
                             className="form-control text-center "
-                            value="1"
+                            defaultValue="1"
                             min="1"
                             id="qtyInput"
                           />
@@ -270,7 +358,7 @@ export default function Cart() {
                       <td className="function">
                         <button
                           type="button"
-                          className="btn btn-custom-link-dark"
+                          className="btn btn-primary-500 text-white"
                         >
                           加入
                         </button>
@@ -308,7 +396,7 @@ export default function Cart() {
                           <input
                             type="number"
                             className="form-control text-center "
-                            value="1"
+                            defaultValue="1"
                             min="1"
                             id="qtyInput"
                           />
@@ -325,7 +413,7 @@ export default function Cart() {
                       <td className="function">
                         <button
                           type="button"
-                          className="btn btn-custom-link-dark"
+                          className="btn btn-primary-500 text-white"
                         >
                           加入
                         </button>
@@ -363,7 +451,7 @@ export default function Cart() {
                           <input
                             type="number"
                             className="form-control text-center "
-                            value="1"
+                            defaultValue="1"
                             min="1"
                             id="qtyInput"
                           />
@@ -380,7 +468,7 @@ export default function Cart() {
                       <td className="function">
                         <button
                           type="button"
-                          className="btn btn-custom-link-dark"
+                          className="btn btn-primary-500 text-white"
                         >
                           加入
                         </button>
@@ -388,6 +476,163 @@ export default function Cart() {
                     </tr>
                   </tbody>
                 </table>
+                {/* Mobile Addon DOM */}
+                <div className="d-block d-lg-none">
+                  {/* 到貨換盆 */}
+                  <div className="addon-card rounded border p-3 mb-3 bg-white">
+                    {/* 上：商品資訊 */}
+                    <div className="d-flex gap-3 mb-3">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
+                        style={{
+                          width: "64px",
+                          height: "64px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+
+                      <div>
+                        <div className="titleZh">到貨換盆</div>
+                        <div className="titleEn">
+                          專業換盆服務，含優質培養土
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 中：qty + price */}
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="qty-input-group">
+                        <button type="button" className="btn">
+                          －
+                        </button>
+
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue="1"
+                          min="1"
+                        />
+
+                        <button type="button" className="btn">
+                          ＋
+                        </button>
+                      </div>
+
+                      <div className="fw-bold">NT $ 150</div>
+                    </div>
+
+                    {/* 下：CTA */}
+                    <div className="d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="btn btn-primary-500 text-white"
+                      >
+                        加入
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 送禮包裝 */}
+                  <div className="addon-card border rounded p-3 mb-3 bg-white">
+                    <div className="d-flex gap-3 mb-3">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
+                        style={{
+                          width: "64px",
+                          height: "64px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+
+                      <div>
+                        <div className="titleZh">送禮包裝</div>
+                        <div className="titleEn">精美禮盒包裝，附手寫卡片</div>
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="qty-input-group">
+                        <button type="button" className="btn">
+                          －
+                        </button>
+
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue="1"
+                          min="1"
+                        />
+
+                        <button type="button" className="btn">
+                          ＋
+                        </button>
+                      </div>
+
+                      <div className="fw-bold">NT $ 80</div>
+                    </div>
+
+                    <div className="d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="btn btn-primary-500 text-white"
+                      >
+                        加入
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 新手照護卡 */}
+                  <div className="addon-card border rounded p-3 mb-3 bg-white">
+                    <div className="d-flex gap-3 mb-3">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
+                        style={{
+                          width: "64px",
+                          height: "64px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+
+                      <div>
+                        <div className="titleZh">新手照護卡</div>
+                        <div className="titleEn">專屬照護指南，隨貨附贈</div>
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="qty-input-group">
+                        <button type="button" className="btn">
+                          －
+                        </button>
+
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue="1"
+                          min="1"
+                        />
+
+                        <button type="button" className="btn">
+                          ＋
+                        </button>
+                      </div>
+
+                      <div className="fw-bold">免費</div>
+                    </div>
+
+                    <div className="d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="btn btn-primary-500 text-white"
+                      >
+                        加入
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="section mb-4">
@@ -404,7 +649,7 @@ export default function Cart() {
                 </button>
               </div>
               <div className="p-4 bg-white">
-                <table className="table cart-table table-hover">
+                <table className="table cart-table table-hover d-none d-lg-table">
                   <tbody>
                     <tr>
                       <td style={{ width: "400px" }}>
@@ -436,7 +681,7 @@ export default function Cart() {
                           <input
                             type="number"
                             className="form-control text-center "
-                            value="1"
+                            defaultValue="1"
                             min="1"
                             id="qtyInput"
                           />
@@ -453,7 +698,7 @@ export default function Cart() {
                       <td className="function">
                         <button
                           type="button"
-                          className="btn btn-custom-link-dark"
+                          className="btn btn-primary-500 text-white"
                         >
                           加入
                         </button>
@@ -489,7 +734,7 @@ export default function Cart() {
                           <input
                             type="number"
                             className="form-control text-center "
-                            value="1"
+                            defaultValue="1"
                             min="1"
                             id="qtyInput"
                           />
@@ -506,7 +751,7 @@ export default function Cart() {
                       <td className="function">
                         <button
                           type="button"
-                          className="btn btn-custom-link-dark"
+                          className="btn btn-primary-500 text-white"
                         >
                           加入
                         </button>
@@ -514,6 +759,113 @@ export default function Cart() {
                     </tr>
                   </tbody>
                 </table>
+                {/* Mobile Product DOM */}
+                <div className="d-block d-lg-none">
+                  {/* 商品卡片 1 */}
+                  <div className="addon-card border rounded p-3 mb-3 bg-white">
+                    {/* 上：商品資訊 */}
+                    <div className="d-flex gap-3 mb-3">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
+                        style={{
+                          width: "64px",
+                          height: "64px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                        alt="吊蘭"
+                      />
+                      <div>
+                        <div className="titleZh">吊蘭</div>
+                        <div className="titleEn">Spider Plant</div>
+                      </div>
+                    </div>
+
+                    {/* 中：qty + price */}
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="qty-input-group d-flex align-items-center">
+                        <button type="button" className="btn">
+                          －
+                        </button>
+
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue="1"
+                          min="1"
+                          style={{ width: "50px" }}
+                        />
+
+                        <button type="button" className="btn">
+                          ＋
+                        </button>
+                      </div>
+
+                      <div className="fw-bold">NT $ 340</div>
+                    </div>
+
+                    {/* 下：CTA */}
+                    <div className="d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="btn btn-primary-500 text-white"
+                      >
+                        加入
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 商品卡片 2 */}
+                  <div className="addon-card border rounded p-3 mb-3 bg-white">
+                    <div className="d-flex gap-3 mb-3">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIoTqFvPu3IOd_DzmzYwpB_GmNYcbcd02WsQ&s"
+                        style={{
+                          width: "64px",
+                          height: "64px",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                        alt="波士頓蕨"
+                      />
+                      <div>
+                        <div className="titleZh">波士頓蕨</div>
+                        <div className="titleEn">Boston Fern</div>
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div className="qty-input-group d-flex align-items-center">
+                        <button type="button" className="btn">
+                          －
+                        </button>
+
+                        <input
+                          type="number"
+                          className="form-control text-center"
+                          defaultValue="1"
+                          min="1"
+                          style={{ width: "50px" }}
+                        />
+
+                        <button type="button" className="btn">
+                          ＋
+                        </button>
+                      </div>
+
+                      <div className="fw-bold">NT $ 350</div>
+                    </div>
+
+                    <div className="d-flex justify-content-end">
+                      <button
+                        type="button"
+                        className="btn btn-primary-500 text-white"
+                      >
+                        加入
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -566,7 +918,7 @@ export default function Cart() {
                   <div className="orderPrice d-flex justify-content-between">
                     <h6 style={{ color: "#666666" }}>總付款金額</h6>
                     <h6 style={{ color: "#222222" }}>
-                      {couponApplied ? totalAfterCoupon : total}
+                      ${couponApplied ? totalAfterCoupon : total}
                     </h6>
                   </div>
                 </div>

@@ -144,13 +144,13 @@ export default function Checkout() {
   };
   return (
     <>
-      <div className="container mb-5 ">
+      <div className="container mb-5 cart-table">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="row d-flex justify-content-between">
             <div className="col-12 col-lg-9 ">
               <div className="section mb-4">
                 <div className="head d-flex justify-content-between py-4 px-6 bg-secondary-100">
-                  <h4 className="text-secondary-700">購物車</h4>
+                  <h4 className="text-secondary-700">訂單內容</h4>
                   <button
                     type="button"
                     onClick={() => navigate("/cart")}
@@ -160,7 +160,7 @@ export default function Checkout() {
                   </button>
                 </div>
                 <div className="p-4 bg-white">
-                  <table className="table cart-table table-hover">
+                  <table className="table cart-table table-hover d-none d-lg-table">
                     <thead>
                       <tr>
                         <th>商品</th>
@@ -205,6 +205,52 @@ export default function Checkout() {
                       })}
                     </tbody>
                   </table>
+                  {/*mobile DOM*/}
+                  <div className="d-block d-lg-none">
+                    {cartData.map((item) => {
+                      return (
+                        <div
+                          key={item.id}
+                          className="cart-card mb-3 p-3 rounded"
+                        >
+                          {/* 商品資訊 */}
+                          <div className="d-flex gap-3 mb-3">
+                            <img
+                              src={item.product.imageUrl}
+                              style={{
+                                width: "80px",
+                                height: "80px",
+                                objectFit: "cover",
+                              }}
+                            />
+
+                            <div>
+                              <div className="titleZh">
+                                {item.product.titleZh}
+                              </div>
+                              <div className="titleEn">
+                                {item.product.titleEn}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 單價 */}
+                          <div className="d-flex justify-content-end mb-2">
+                            <span>NT $ {item.product.price}</span>
+                          </div>
+
+                          {/* 數量 */}
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span>數量：{item.qty}</span>
+                            {/* 總價 */}
+                            <div className="d-flex justify-content-between fw-bold">
+                              <span>NT $ {item.total}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -504,7 +550,7 @@ export default function Checkout() {
                     <div className="orderPrice d-flex justify-content-between">
                       <h6 style={{ color: "#666666" }}>總付款金額</h6>
                       <h6 style={{ color: "#222222" }}>
-                        {couponApplied ? totalAfterCoupon : total}
+                        ${couponApplied ? totalAfterCoupon : total}
                       </h6>
                     </div>
                   </div>
