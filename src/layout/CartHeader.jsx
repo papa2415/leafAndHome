@@ -11,13 +11,27 @@ export default function CartHeader({ pathname }) {
   ];
 
   const getStepClass = (path) => {
-    if (location.pathname === path) return "active";
-    if (location.pathname.includes("order-success")) return "completed";
-    if (
-      location.pathname.includes("checkout") &&
-      path !== "/cart/order-success"
-    )
+    const currentPath = location.pathname;
+
+    // Step3：完成頁 → 自己 active，其餘 completed
+    if (currentPath.includes("order-success")) {
+      if (path === "/cart/order-success") return "active";
       return "completed";
+    }
+
+    // Step2：結帳頁
+    if (currentPath.includes("checkout")) {
+      if (path === "/cart") return "completed";
+      if (path === "/cart/checkout") return "active";
+      return "";
+    }
+
+    // Step1：購物車頁
+    if (currentPath === "/cart") {
+      if (path === "/cart") return "active";
+      return "";
+    }
+
     return "";
   };
 

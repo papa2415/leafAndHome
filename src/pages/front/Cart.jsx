@@ -519,11 +519,11 @@ export default function Cart() {
           </div>
           <div className="col-12 col-lg-3">
             <div
-              className="card border position-sticky section"
+              className="card position-sticky shadow section"
               style={{ top: "16px" }}
             >
-              <div className="card-head bg-secondary-100 px-6 py-4">
-                <h4 className="card-title text-center text-secondary-700">
+              <div className="card-head bg-primary-500 px-6 py-4">
+                <h4 className="card-title text-start text-neutral-100">
                   訂單內容
                 </h4>
               </div>

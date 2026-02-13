@@ -257,17 +257,22 @@ export default function Checkout() {
                         )}
                       </div>
                       <div className="carrier d-flex gap-4">
-                        <div className="type d-flex flex-column mb-2">
-                          <label htmlFor="carrier" style={{ color: "#666666" }}>
-                            載具類型
-                          </label>
-                          <select name="" id="carrier" defaultValue={""}>
-                            <option value="" disabled>
-                              請選擇
-                            </option>
-                            <option value="手機條碼載具">手機條碼載具</option>
-                            <option value="會員載具">會員載具</option>
-                          </select>
+                        <div className="type d-flex mb-2 gap-2">
+                          <div className="d-flex flex-column">
+                            <label
+                              htmlFor="carrier"
+                              style={{ color: "#666666" }}
+                            >
+                              載具類型
+                            </label>
+                            <select name="" id="carrier" defaultValue={""}>
+                              <option value="" disabled>
+                                請選擇
+                              </option>
+                              <option value="手機條碼載具">手機條碼載具</option>
+                              <option value="會員載具">會員載具</option>
+                            </select>
+                          </div>
                           <div className="code d-flex flex-column">
                             <label
                               htmlFor="barcode"
@@ -283,9 +288,14 @@ export default function Checkout() {
                           </div>
                         </div>
                       </div>
-                      <div className="d-flex">
+                      <div className="d-flex gap-1">
                         <input type="checkbox" id="defaultCarrier" />
-                        <label htmlFor="defaultCarrier">設定為預設載具</label>
+                        <label
+                          htmlFor="defaultCarrier"
+                          style={{ color: "#666666" }}
+                        >
+                          設定為預設載具
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -405,11 +415,11 @@ export default function Checkout() {
             </div>
             <div className="col-12 col-lg-3">
               <div
-                className="card border position-sticky section"
+                className="card shadow position-sticky section"
                 style={{ top: "16px" }}
               >
-                <div className="card-head bg-secondary-100 px-6 py-4">
-                  <h4 className="card-title text-center text-secondary-700">
+                <div className="card-head bg-primary-500 px-6 py-4">
+                  <h4 className="card-title text-start text-neutral-100">
                     訂單內容
                   </h4>
                 </div>
