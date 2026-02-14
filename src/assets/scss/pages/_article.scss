@@ -151,10 +151,12 @@
   z-index: 10;
 }
 .newsletter-left {
-  background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770286789726.png");
+  background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1771057954022.png");
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  object-fit: cover;
+ background-size: cover; /* 如果希望完全填滿但不留白 */
+  background-position: center left; /* 讓圖片靠左對齊，確保左側盆栽出現 */
+  background-repeat: no-repeat;
 }
 .newsletter-right {
   border-bottom-left-radius: 8px;
@@ -182,6 +184,7 @@
   .newsletter-left {
     border-bottom-left-radius: 8px;
     border-top-right-radius: 0px;
+      background-image: url("https://storage.googleapis.com/vue-course-api.appspot.com/leafandhome/1770286789726.png");
   }
   .newsletter-right {
     border-top-right-radius: 8px;
@@ -260,3 +263,4 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
