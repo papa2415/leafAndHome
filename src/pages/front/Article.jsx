@@ -216,7 +216,7 @@ function Article() {
       </header>
 
       {/*前言區 */}
-      <section className=" bg-neutral-100 ">
+      <section className="background-100">
         <div className="container py-11 pt-md-14 pb-md-15">
           <div className="content-limit">
             <p className="lead text-dark opacity-75 fs-7  mb-8 mb-md-12 pb-4 pb-md-8  border-bottom text-center lh-lg italic">
@@ -235,6 +235,15 @@ function Article() {
                     ></h3>
                   );
                 case "paragraph":
+                  if (block.content?.trim() === "<!--EMPTY_LINE-->") {
+                    return (
+                      <div
+                        key={index}
+                        className="article-content px-md-9"
+                        style={{ height: "2em" }}
+                      />
+                    );
+                  }
                   {
                     /*dangerouslySetInnerHTML可以把HTML標籤的字串轉為網頁標籤*/
                   }
@@ -250,7 +259,7 @@ function Article() {
                   return (
                     <figure
                       key={index}
-                      className="img-fluid my-9  my-md-12 text-center"
+                      className="img-fluid mb-9 mt-7  mb-md-12 text-center"
                     >
                       <img
                         src={block.imageUrl}
@@ -258,7 +267,7 @@ function Article() {
                         className="img-fluid  rounded-custom"
                       />
                       {block.caption && (
-                        <figcaption className="text-muted  mt-4 italic text-center">
+                        <figcaption className="text-muted  mt-2 italic text-center">
                           —— {block.caption}
                         </figcaption>
                       )}
@@ -313,7 +322,7 @@ function Article() {
           </div>
         </div>
       </section>
-      <section className=" bg-neutral-200 py-11 py-md-14">
+      <section className=" background-200 py-11 py-md-14">
         <div className="container">
           <div className="content-limit">
             {article.contentBlocks?.map((block, index) => {
@@ -363,7 +372,7 @@ function Article() {
         </div>
       </section>
       {/* 推薦文章區 */}
-      <section className=" bg-neutral-100 rec-articles-wrapper">
+      <section className=" background-100 rec-articles-wrapper">
         <div className="container">
           <div className="content-limit">
             <div className="row">
@@ -406,7 +415,7 @@ function Article() {
         </div>
       </section>
       {/* --- 留言/電子報 --- */}
-      <section className=" bg-neutral-200  bottom-section">
+      <section className=" background-200  bottom-section">
         {/* 電子報 */}
         <div className="container mb-11 mb-md-14">
           <div className="card mb-3 newsletter-wrapper">
@@ -475,7 +484,7 @@ function Article() {
             </div>
             {/* --- 8. 留言輸入表單 (條件渲染) --- */}
             {/*篩選出留言區塊*/}
-            <div className="bg-white rounded-4">
+            <div className="background-white rounded-4">
               {article.contentBlocks
                 ?.find((block) => block.type === "commentSection")
                 ?.comments?.map((c, index) => (
