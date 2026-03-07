@@ -2,7 +2,6 @@ import { useOutletContext } from "react-router";
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import * as bootstrap from "bootstrap";
-import { deleteAdminCouponsApi, getAdminCouponsApi } from "../../services/coupon";
 
 const INITIAL_MODAL_DATA = {
   title: "",
@@ -35,20 +34,21 @@ export default function Coupon() {
     }));
   };
 
-  const getAdminCoupon = async () => {
+  const fetchCoupons = async () => {
+    if (!token) return;
     try {
-      const response = await getAdminCouponsApi();
-      setData(response.data.coupons);
+      const res = await axios.get(`${API_BASE}/api/${API_PATH}/admin/coupons`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setData(res.data.coupons);
     } catch (error) {
-      console.log(error.response);
       alert("token無效或已過期");
     }
   };
-
   useEffect(() => {
-    (async () => {
-      await getAdminCoupon();
-    })(); //取得 Coupon
+    fetchCoupons();
 
     couponModalRef.current = new bootstrap.Modal("#couponModal", {
       keyboard: false,
@@ -57,8 +57,23 @@ export default function Coupon() {
 
   const deleteCoupon = async (id) => {
     try {
-      await deleteAdminCouponsApi(id);
-      getAdminCoupon();
+      const res = await axios.delete(
+        `${API_BASE}/api/${API_PATH}/admin/coupon/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+      const res2 = await axios.get(
+        `${API_BASE}/api/${API_PATH}/admin/coupons`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+      setData(res2.data.coupons);
     } catch (error) {
       alert(error.message);
     }
@@ -82,16 +97,24 @@ export default function Coupon() {
     try {
       let res;
       if (modalType === "create") {
-        res = await axios.post(`${API_BASE}/api/${API_PATH}/admin/coupon`, data, {
-          headers: { Authorization: token },
-        });
+        res = await axios.post(
+          `${API_BASE}/api/${API_PATH}/admin/coupon`,
+          data,
+          {
+            headers: { Authorization: token },
+          },
+        );
       } else {
-        res = await axios.put(`${API_BASE}/api/${API_PATH}/admin/coupon/${modalData.id}`, data, {
-          headers: { Authorization: token },
-        });
+        res = await axios.put(
+          `${API_BASE}/api/${API_PATH}/admin/coupon/${modalData.id}`,
+          data,
+          {
+            headers: { Authorization: token },
+          },
+        );
       }
 
-      getAdminCoupon();
+      fetchCoupons();
       closeModal();
     } catch (error) {
       console.log(error.response?.data || error.message);
@@ -123,7 +146,8 @@ export default function Coupon() {
                 onClick={() => {
                   openModal("create", INITIAL_MODAL_DATA);
                 }}
-                className="btn btn-primary">
+                className="btn btn-primary"
+              >
                 新增優惠卷
               </button>
             </div>
@@ -151,7 +175,9 @@ export default function Coupon() {
                       <th scope="row">{coupon.title}</th>
                       <td>{coupon.is_enabled ? "啟用" : "未啟用"} </td>
                       <td>{coupon.percent}</td>
-                      <td>{new Date(coupon.due_date * 1000).toLocaleDateString()}</td>
+                      <td>
+                        {new Date(coupon.due_date * 1000).toLocaleDateString()}
+                      </td>
                       <td>{coupon.code}</td>
                       <td>
                         <button
@@ -159,7 +185,8 @@ export default function Coupon() {
                           onClick={() => {
                             openModal("edit", coupon);
                           }}
-                          className="btn btn-outline-primary me-2">
+                          className="btn btn-outline-primary me-2"
+                        >
                           編輯
                         </button>
                         <button
@@ -168,7 +195,8 @@ export default function Coupon() {
                           onClick={() => {
                             deleteCoupon(coupon.id);
                           }}
-                          className="btn btn-primary">
+                          className="btn btn-primary"
+                        >
                           刪除
                         </button>
                       </td>
@@ -183,14 +211,28 @@ export default function Coupon() {
         <h1>請先登入</h1>
       )}
 
-      <div className="modal fade modal-xl" id="couponModal" tabIndex="-1" aria-labelledby="couponModalLabel" aria-hidden="true" ref={couponModalRef}>
+      <div
+        className="modal fade modal-xl"
+        id="couponModal"
+        tabIndex="-1"
+        aria-labelledby="couponModalLabel"
+        aria-hidden="true"
+        ref={couponModalRef}
+      >
         <div className="modal-dialog">
           <div className="modal-content border-0">
             <div className="modal-header bg-dark text-white">
               <h5 id="productModalLabel" className="modal-title">
-                <span>{modalType === "edit" ? "編輯優惠卷" : "新增優惠卷"}</span>
+                <span>
+                  {modalType === "edit" ? "編輯優惠卷" : "新增優惠卷"}
+                </span>
               </h5>
-              <button type="button" className="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                type="button"
+                className="btn-close bg-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -237,9 +279,15 @@ export default function Coupon() {
                   id="due_date"
                   type="date"
                   className="form-control"
-                  value={modalData.due_date ? formatDateForInput(modalData.due_date) : ""}
+                  value={
+                    modalData.due_date
+                      ? formatDateForInput(modalData.due_date)
+                      : ""
+                  }
                   onChange={(e) => {
-                    const newTimestamp = Math.floor(new Date(e.target.value).getTime() / 1000);
+                    const newTimestamp = Math.floor(
+                      new Date(e.target.value).getTime() / 1000,
+                    );
                     setModalData({ ...modalData, due_date: newTimestamp });
                   }}
                 />
@@ -279,7 +327,12 @@ export default function Coupon() {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal" onClick={() => closeModal()}>
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+                onClick={() => closeModal()}
+              >
                 取消
               </button>
               <button
@@ -287,7 +340,8 @@ export default function Coupon() {
                 className="btn btn-primary"
                 onClick={() => {
                   updateCoupon();
-                }}>
+                }}
+              >
                 確認
               </button>
             </div>

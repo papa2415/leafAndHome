@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router";
 import mark from "../../public/mark.svg";
 
-export default function CartHeader() {
+export default function CartHeader({ pathname }) {
   const location = useLocation();
 
   const steps = [
@@ -57,7 +57,9 @@ export default function CartHeader() {
           {steps.map((step, index) => (
             <div key={step.path} className="d-flex align-items-center gap-2">
               {/* 圓圈 */}
-              <div className={`step-circle ${getStepClass(step.path)}`}>{index + 1}</div>
+              <div className={`step-circle ${getStepClass(step.path)}`}>
+                {index + 1}
+              </div>
 
               {/* 文字 */}
               <span className="text-neutral-700">{step.label}</span>
